@@ -101,7 +101,7 @@ def shield(num):
 
 FAVICON_SVG = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
-    '<rect width="100" height="100" fill="#0d0d0d"/>'
+    '<rect width="100" height="100" fill="#0a0a0a"/>'
     '<path d="M50 3.5C40 3.5 30 5.5 24 7.5 20 8.8 12 10 5.5 10c0 0 2 8 2 16v18.5C7.5 68 30 86.5 50 96.5 '
     '70 86.5 92.5 68 92.5 44.5V26c0-8 2-16 2-16C88 10 80 8.8 76 7.5 70 5.5 60 3.5 50 3.5Z" '
     'fill="#0d0d0d" stroke="#fff" stroke-width="7"/>'
@@ -275,7 +275,7 @@ doc = f"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(TITLE)}</title>
 <meta name="description" content="{html.escape(DESCRIPTION, quote=True)}">
-<meta name="theme-color" content="#0d0d0d">
+<meta name="theme-color" content="#0a0a0a">
 <link rel="icon" href="{FAVICON_URI}" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{html.escape(TITLE, quote=True)}">
