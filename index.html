@@ -52,9 +52,8 @@ h1{position:relative;padding:6px 0;font-size:clamp(42px,9.4vw,106px);line-height
  text-shadow:4px 5px 0 rgba(0,0,0,.75);text-wrap:balance}
 .lede{margin:0;max-width:540px;font-size:clamp(16px,2.1vw,20px);line-height:1.55;color:#a3a3a3;text-wrap:pretty}
 .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
-.fleet{display:flex;align-items:flex-end;gap:22px;margin-top:10px;opacity:.5}
-.fleet .i-car-lg{width:118px}
-.fleet .i-tr{width:132px}
+.fleet{display:flex;align-items:flex-end;gap:24px;margin-top:10px;opacity:.5;flex-wrap:wrap}
+.fleet .ic{width:clamp(96px,17vw,128px)}
 .hazard{height:24px;opacity:.85;background:repeating-linear-gradient(
  118deg,#fff 0,#fff 9px,#0d0d0d 9px,#0d0d0d 18px,#fff 18px,#fff 22px,#0d0d0d 22px,#0d0d0d 46px)}
 
@@ -154,7 +153,7 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
 </script>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-car" viewBox="0 0 160 54"><path d="M6 40h6a13 13 0 0 0 26 0h44a13 13 0 0 0 26 0h18a8 8 0 0 0 8-8v-8c0-4-3-6-7-7l-22-4-16-10c-3-2-6-3-10-3H60c-4 0-7 1-10 3L34 12l-20 4c-6 1-10 5-10 11v9a4 4 0 0 0 2 4Zm54-27h30c3 0 5 1 7 3l10 8H60Zm-34 3 14-3h14v11H16Z"/><circle cx="25" cy="41" r="9"/><circle cx="115" cy="41" r="9"/></symbol><symbol id="i-truck" viewBox="0 0 170 54"><path d="M4 40h8a13 13 0 0 0 26 0h50a13 13 0 0 0 26 0h52V20h-40l-14-14c-2-2-5-4-9-4H56c-4 0-7 2-9 5L34 22l-22 4c-6 1-9 5-9 10Zm56-32h29c3 0 5 1 7 3l10 11H60Zm-34 4 14-4h14v14H16Z"/><circle cx="25" cy="41" r="9"/><circle cx="101" cy="41" r="9"/></symbol><symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 3.5C40 3.5 30 5.5 24 7.5 20 8.8 12 10 5.5 10c0 0 2 8 2 16v18.5C7.5 68 30 86.5 50 96.5 70 86.5 92.5 68 92.5 44.5V26c0-8 2-16 2-16C88 10 80 8.8 76 7.5 70 5.5 60 3.5 50 3.5Z" fill="#0d0d0d" stroke="#ffffff" stroke-width="7"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-truck" viewBox="0 0 200 70"><path d="M8 52 L8 34 Q8 29 13 28 L48 26 L61 9 Q63 6 68 6 L111 6 Q116 6 118 9 L127 26 L185 26 Q191 26 192 32 L192 52 L175 52 A15 15 0 0 0 145 52 L57 52 A15 15 0 0 0 27 52 Z"/><circle cx="42" cy="52" r="12"/><circle cx="160" cy="52" r="12"/></symbol><symbol id="i-car" viewBox="0 0 200 70"><path d="M6 50 L6 40 Q6 34 14 32 L46 27 L66 11 Q70 8 77 8 L124 8 Q131 8 136 12 L160 28 L184 32 Q194 35 194 43 L194 50 L172 50 A15 15 0 0 0 142 50 L58 50 A15 15 0 0 0 28 50 Z"/><circle cx="43" cy="50" r="12"/><circle cx="157" cy="50" r="12"/></symbol><symbol id="i-suv" viewBox="0 0 200 70"><path d="M8 51 L8 38 Q8 32 15 30 L44 27 L58 10 Q61 7 66 7 L150 7 Q157 7 160 11 L172 27 L184 31 Q192 34 192 42 L192 51 L174 51 A15 15 0 0 0 144 51 L56 51 A15 15 0 0 0 26 51 Z"/><circle cx="41" cy="51" r="12"/><circle cx="159" cy="51" r="12"/></symbol><symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 3.5C40 3.5 30 5.5 24 7.5 20 8.8 12 10 5.5 10c0 0 2 8 2 16v18.5C7.5 68 30 86.5 50 96.5 70 86.5 92.5 68 92.5 44.5V26c0-8 2-16 2-16C88 10 80 8.8 76 7.5 70 5.5 60 3.5 50 3.5Z" fill="#0d0d0d" stroke="#ffffff" stroke-width="7"/></symbol></svg>
 
 <div class="topbar cond">
   <span>704 Hall Ave., Dayton, OH 45404</span>
@@ -177,7 +176,7 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
       <a class="btn btn-solid cond" href="tel:9374787022">Call Now &mdash; 937-478-7022</a>
       <a class="btn btn-outline cond" href="#inventory">View Inventory</a>
     </div>
-    <div class="fleet" aria-hidden="true"><svg class="ic i-car-lg" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic i-tr" viewBox="0 0 170 54" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg></div>
+    <div class="fleet" aria-hidden="true"><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg></div>
   </div>
   <div class="hazard" aria-hidden="true"></div>
 </section>
@@ -187,50 +186,50 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
   <p class="sub">Inventory changes weekly. Call about anything you see &mdash; or tell us what you&rsquo;re hunting for.</p>
   <div class="grid">
     <article class="card">
-      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>2015 Chevy Silverado 1500</h3><span class="price">$18,500</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>4WD · 112K mi · Crew Cab</span></div>
+        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span>4WD · 112K mi · Crew Cab</span></div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2015 Chevy Silverado 1500">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>2012 Ford F-150 XLT</h3><span class="price">$14,900</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>4WD · 138K mi · New Brakes</span></div>
+        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span>4WD · 138K mi · New Brakes</span></div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2012 Ford F-150 XLT">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>2016 Dodge Charger R/T</h3><span class="price">$19,750</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>5.7 HEMI · 96K mi · Clean Title</span></div>
+        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>5.7 HEMI · 96K mi · Clean Title</span></div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2016 Dodge Charger R/T">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>2014 Honda Accord EX-L</h3><span class="price">$11,400</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>FWD · 104K mi · Leather</span></div>
+        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>FWD · 104K mi · Leather</span></div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2014 Honda Accord EX-L">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>2017 Ram 1500 Big Horn</h3><span class="price">$22,900</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>4WD · 88K mi · Tow Package</span></div>
+        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span>4WD · 88K mi · Tow Package</span></div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2017 Ram 1500 Big Horn">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>2013 Jeep Grand Cherokee</h3><span class="price">$12,850</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>4WD · 129K mi · New Tires</span></div>
+        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><span>4WD · 129K mi · New Tires</span></div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2013 Jeep Grand Cherokee">Call About This One</a>
       </div>
     </article>
@@ -240,17 +239,17 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
 
 <div class="divider" aria-hidden="true">
   <div class="stripes"></div>
-  <div class="divider-row"><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg></div>
+  <div class="divider-row"><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg></div>
 </div>
 
 <section id="why" class="wrap">
   <div class="head"><svg class="ic shield" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#i-shield"/><text x="50" y="56" text-anchor="middle" dominant-baseline="middle" fill="#fff">02</text></svg><h2>WHY BUY FROM US</h2></div>
   <p class="sub">Small lot, plain terms. You deal with the people who actually looked the vehicle over.</p>
   <div class="grid4">
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>INSPECTED BEFORE LISTED</h3><p>Every vehicle gets a full mechanical look-over in our own shop before it goes on the lot.</p></div>
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>FINANCING AVAILABLE</h3><p>We work with local lenders and buy-here options. Call and we’ll tell you straight what you qualify for.</p></div>
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>TRADE-INS WELCOME</h3><p>Bring what you’re driving now. We’ll appraise it on the spot and put the value toward your next one.</p></div>
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>NO PRESSURE, NO GAMES</h3><p>Prices are the prices. Take a test drive, ask hard questions, bring your own mechanic.</p></div>
+    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>INSPECTED BEFORE LISTED</h3><p>Every vehicle gets a full mechanical look-over in our own shop before it goes on the lot.</p></div>
+    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>FINANCING AVAILABLE</h3><p>We work with local lenders and buy-here options. Call and we’ll tell you straight what you qualify for.</p></div>
+    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>TRADE-INS WELCOME</h3><p>Bring what you’re driving now. We’ll appraise it on the spot and put the value toward your next one.</p></div>
+    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>NO PRESSURE, NO GAMES</h3><p>Prices are the prices. Take a test drive, ask hard questions, bring your own mechanic.</p></div>
   </div>
 </section>
 
@@ -298,6 +297,6 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
   &copy; 2026 I-75 Truck &amp; Car LLC &middot; 704 Hall Ave., Dayton, OH 45404 &middot; Used Truck &amp; Car Sales
 </footer>
 
-<a class="btn sticky cond" href="tel:9374787022"><svg class="ic " viewBox="0 0 160 54" aria-hidden="true" focusable="false"><use href="#i-car"/></svg>Call the Lot &mdash; 937-478-7022</a>
+<a class="btn sticky cond" href="tel:9374787022"><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg>Call the Lot &mdash; 937-478-7022</a>
 </body>
 </html>

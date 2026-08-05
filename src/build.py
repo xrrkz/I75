@@ -23,12 +23,12 @@ LOGO_W, LOGO_H = 640, 292
 LOGO_QUALITY = 72
 
 INVENTORY = [
-    ("2015 Chevy Silverado 1500", "$18,500", "4WD · 112K mi · Crew Cab"),
-    ("2012 Ford F-150 XLT",       "$14,900", "4WD · 138K mi · New Brakes"),
-    ("2016 Dodge Charger R/T",    "$19,750", "5.7 HEMI · 96K mi · Clean Title"),
-    ("2014 Honda Accord EX-L",    "$11,400", "FWD · 104K mi · Leather"),
-    ("2017 Ram 1500 Big Horn",    "$22,900", "4WD · 88K mi · Tow Package"),
-    ("2013 Jeep Grand Cherokee",  "$12,850", "4WD · 129K mi · New Tires"),
+    ("2015 Chevy Silverado 1500", "$18,500", "4WD · 112K mi · Crew Cab",        "truck"),
+    ("2012 Ford F-150 XLT",       "$14,900", "4WD · 138K mi · New Brakes",      "truck"),
+    ("2016 Dodge Charger R/T",    "$19,750", "5.7 HEMI · 96K mi · Clean Title", "car"),
+    ("2014 Honda Accord EX-L",    "$11,400", "FWD · 104K mi · Leather",         "car"),
+    ("2017 Ram 1500 Big Horn",    "$22,900", "4WD · 88K mi · Tow Package",      "truck"),
+    ("2013 Jeep Grand Cherokee",  "$12,850", "4WD · 129K mi · New Tires",       "suv"),
 ]
 
 TRUST = [
@@ -46,20 +46,38 @@ DESCRIPTION = ("Used truck and car sales just off I-75 in Dayton, Ohio. Every ve
                "before it's listed. Financing and trade-ins welcome. Call 937-478-7022.")
 TITLE = "I-75 Truck & Car | Used Trucks & Cars in Dayton, OH"
 
-# The car silhouette is used 29 times and the shield 3 times; each is defined
-# once as a <symbol> and referenced with <use>.
+# Vehicle silhouettes are side profiles on a shared 200x70 grid with a common
+# ground line at y=51 and 12px wheels, so mixing body styles in one row keeps
+# them on the same baseline at the same scale. The wheel arches are cut out of
+# the body path and the wheels drawn as separate circles, which is what makes a
+# wheel still read as a wheel at 24px.
+VEHICLES = {
+    "truck": (
+        "M8 52 L8 34 Q8 29 13 28 L48 26 L61 9 Q63 6 68 6 L111 6 Q116 6 118 9 L127 26 "
+        "L185 26 Q191 26 192 32 L192 52 L175 52 A15 15 0 0 0 145 52 L57 52 A15 15 0 0 0 27 52 Z",
+        ((42, 52), (160, 52)),
+    ),
+    "car": (
+        "M6 50 L6 40 Q6 34 14 32 L46 27 L66 11 Q70 8 77 8 L124 8 Q131 8 136 12 L160 28 "
+        "L184 32 Q194 35 194 43 L194 50 L172 50 A15 15 0 0 0 142 50 L58 50 A15 15 0 0 0 28 50 Z",
+        ((43, 50), (157, 50)),
+    ),
+    "suv": (
+        "M8 51 L8 38 Q8 32 15 30 L44 27 L58 10 Q61 7 66 7 L150 7 Q157 7 160 11 L172 27 "
+        "L184 31 Q192 34 192 42 L192 51 L174 51 A15 15 0 0 0 144 51 L56 51 A15 15 0 0 0 26 51 Z",
+        ((41, 51), (159, 51)),
+    ),
+}
+
 SPRITE = (
     '<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">'
-    '<symbol id="i-car" viewBox="0 0 160 54">'
-    '<path d="M6 40h6a13 13 0 0 0 26 0h44a13 13 0 0 0 26 0h18a8 8 0 0 0 8-8v-8c0-4-3-6-7-7'
-    'l-22-4-16-10c-3-2-6-3-10-3H60c-4 0-7 1-10 3L34 12l-20 4c-6 1-10 5-10 11v9a4 4 0 0 0 2 4Z'
-    'm54-27h30c3 0 5 1 7 3l10 8H60Zm-34 3 14-3h14v11H16Z"/>'
-    '<circle cx="25" cy="41" r="9"/><circle cx="115" cy="41" r="9"/></symbol>'
-    '<symbol id="i-truck" viewBox="0 0 170 54">'
-    '<path d="M4 40h8a13 13 0 0 0 26 0h50a13 13 0 0 0 26 0h52V20h-40l-14-14c-2-2-5-4-9-4H56'
-    'c-4 0-7 2-9 5L34 22l-22 4c-6 1-9 5-9 10Zm56-32h29c3 0 5 1 7 3l10 11H60Zm-34 4 14-4h14v14H16Z"/>'
-    '<circle cx="25" cy="41" r="9"/><circle cx="101" cy="41" r="9"/></symbol>'
-    '<symbol id="i-shield" viewBox="0 0 100 100">'
+    + "".join(
+        f'<symbol id="i-{k}" viewBox="0 0 200 70"><path d="{d}"/>'
+        + "".join(f'<circle cx="{x}" cy="{y}" r="12"/>' for x, y in wheels)
+        + "</symbol>"
+        for k, (d, wheels) in VEHICLES.items()
+    )
+    + '<symbol id="i-shield" viewBox="0 0 100 100">'
     '<path d="M50 3.5C40 3.5 30 5.5 24 7.5 20 8.8 12 10 5.5 10c0 0 2 8 2 16v18.5C7.5 68 30 86.5 50 96.5 '
     '70 86.5 92.5 68 92.5 44.5V26c0-8 2-16 2-16C88 10 80 8.8 76 7.5 70 5.5 60 3.5 50 3.5Z" '
     'fill="#0d0d0d" stroke="#ffffff" stroke-width="7"/></symbol>'
@@ -70,13 +88,9 @@ SPRITE = (
 # viewBox stays on the OUTER <svg>: <use> imports the symbol's geometry but not
 # its aspect ratio, so without it `height:auto` falls back to the 150px default
 # replaced-element height and every icon renders oversized.
-def car(cls):
-    return (f'<svg class="ic {cls}" viewBox="0 0 160 54" aria-hidden="true" focusable="false">'
-            '<use href="#i-car"/></svg>')
-
-
-TRUCK = ('<svg class="ic i-tr" viewBox="0 0 170 54" aria-hidden="true" focusable="false">'
-         '<use href="#i-truck"/></svg>')
+def veh(kind, cls=""):
+    return (f'<svg class="ic {cls}" viewBox="0 0 200 70" aria-hidden="true" focusable="false">'
+            f'<use href="#i-{kind}"/></svg>')
 
 
 def shield(num):
@@ -135,9 +149,8 @@ h1{position:relative;padding:6px 0;font-size:clamp(42px,9.4vw,106px);line-height
  text-shadow:4px 5px 0 rgba(0,0,0,.75);text-wrap:balance}
 .lede{margin:0;max-width:540px;font-size:clamp(16px,2.1vw,20px);line-height:1.55;color:#a3a3a3;text-wrap:pretty}
 .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
-.fleet{display:flex;align-items:flex-end;gap:22px;margin-top:10px;opacity:.5}
-.fleet .i-car-lg{width:118px}
-.fleet .i-tr{width:132px}
+.fleet{display:flex;align-items:flex-end;gap:24px;margin-top:10px;opacity:.5;flex-wrap:wrap}
+.fleet .ic{width:clamp(96px,17vw,128px)}
 .hazard{height:24px;opacity:.85;background:repeating-linear-gradient(
  118deg,#fff 0,#fff 9px,#0d0d0d 9px,#0d0d0d 18px,#fff 18px,#fff 22px,#0d0d0d 22px,#0d0d0d 46px)}
 
@@ -233,18 +246,19 @@ def esc(s):
 
 
 cards = "\n".join(f"""    <article class="card">
-      <div class="shot"><div class="stripes"></div>{car('i-ph')}<span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div>{veh(k, 'i-ph')}<span class="cond">Photo coming soon</span></div>
       <div class="body">
         <div class="row"><h3>{esc(n)}</h3><span class="price">{esc(p)}</span></div>
-        <div class="specs cond">{car('i-sm')}<span>{esc(s)}</span></div>
+        <div class="specs cond">{veh(k, 'i-sm')}<span>{esc(s)}</span></div>
         <a class="btn btn-ghost cond" href="tel:{PHONE_DIGITS}" aria-label="Call about the {html.escape(n, quote=True)}">Call About This One</a>
       </div>
-    </article>""" for n, p, s in INVENTORY)
+    </article>""" for n, p, s, k in INVENTORY)
 
-trust = "\n".join(f"""    <div class="trust">{car('i-bg')}<h3>{esc(t)}</h3><p>{esc(b)}</p></div>"""
+trust = "\n".join(f"""    <div class="trust">{veh('car', 'i-bg')}<h3>{esc(t)}</h3><p>{esc(b)}</p></div>"""
                   for t, b in TRUST)
 
-divider = "".join(car("") for _ in range(12))
+_cycle = ["truck", "car", "suv"]
+divider = "".join(veh(_cycle[i % 3]) for i in range(12))
 
 doc = f"""<!DOCTYPE html>
 <html lang="en">
@@ -296,7 +310,7 @@ doc = f"""<!DOCTYPE html>
       <a class="btn btn-solid cond" href="tel:{PHONE_DIGITS}">Call Now &mdash; {PHONE}</a>
       <a class="btn btn-outline cond" href="#inventory">View Inventory</a>
     </div>
-    <div class="fleet" aria-hidden="true">{car('i-car-lg')}{TRUCK}</div>
+    <div class="fleet" aria-hidden="true">{veh('truck')}{veh('car')}{veh('suv')}</div>
   </div>
   <div class="hazard" aria-hidden="true"></div>
 </section>
@@ -367,7 +381,7 @@ doc = f"""<!DOCTYPE html>
   &copy; 2026 I-75 Truck &amp; Car LLC &middot; {ADDR1}, {ADDR2} &middot; Used Truck &amp; Car Sales
 </footer>
 
-<a class="btn sticky cond" href="tel:{PHONE_DIGITS}">{car('')}Call the Lot &mdash; {PHONE}</a>
+<a class="btn sticky cond" href="tel:{PHONE_DIGITS}">{veh('truck')}Call the Lot &mdash; {PHONE}</a>
 </body>
 </html>
 """
