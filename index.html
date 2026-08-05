@@ -16,147 +16,140 @@
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#0d0d0d;color:#e8e8e8;font-family:'Barlow',sans-serif;
+body{margin:0;background:#0a0a0a;color:#d6d6d6;font-family:'Barlow',sans-serif;
  -webkit-font-smoothing:antialiased;min-width:320px;overflow-x:hidden}
-h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;margin:0;transform:skewX(-8deg)}
+h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;margin:0}
+/* The skew is the one bit of motorsport italic kept on type. Shallower than a
+   real oblique so it reads as lean rather than as a novelty. */
+h1,h2,h3{transform:skewX(-6deg)}
 .cond{font-family:'Barlow Condensed',sans-serif}
 .ic{fill:#fff;height:auto;flex:none}
-.shield{width:46px;height:50px;overflow:visible;fill:#0d0d0d}
-.shield text{font-family:'Anton',sans-serif;font-size:34px;letter-spacing:1px}
-:focus-visible{outline:3px solid #fff;outline-offset:3px}
+/* Timing-board numerals: figures line up column-wise in prices and hours. */
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
-.stripes{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(
- 118deg,#fff 0,#fff 10px,transparent 10px,transparent 20px,#fff 20px,#fff 24px,transparent 24px,transparent 52px)}
-.stripes.dark{background:repeating-linear-gradient(
- 118deg,#000 0,#000 10px,transparent 10px,transparent 20px,#000 20px,#000 24px,transparent 24px,transparent 52px)}
+/* Two racing motifs carry the whole page, each used sparingly:
+   .check  a finish-line band, once, closing the hero.
+   .stripe the paired racing stripe, as a section and card marker.
+   The old diagonal hazard texture is gone — it ran behind five separate
+   sections and was doing most of the visual shouting. */
+.check{height:14px;background-color:#0a0a0a;background-image:
+ linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%),
+ linear-gradient(45deg,#fff 25%,transparent 25%,transparent 75%,#fff 75%);
+ background-size:14px 14px;background-position:0 0,7px 7px}
+.stripe{display:inline-block;width:32px;height:8px;flex:none;
+ background:linear-gradient(#fff 0,#fff 3px,transparent 3px,transparent 5px,#fff 5px,#fff 8px)}
 
-.wrap{max-width:1120px;margin:0 auto;padding:clamp(44px,7vw,88px) 18px}
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(48px,7vw,88px) 20px}
+/* The silhouette divider that used to sit between these sections is gone;
+   a hairline frames the whitespace so the gap reads as spacing, not a void. */
+#why{border-top:1px solid #1a1a1a}
 
-.topbar{background:#000;border-bottom:1px solid #262626;padding:9px 18px;display:flex;
- justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:15px;
- letter-spacing:.07em;text-transform:uppercase;color:#8a8a8a}
-.topbar a{color:#fff;text-decoration:none;font-weight:700;letter-spacing:.09em}
-.topbar a:hover{color:#a3a3a3}
+.topbar{border-bottom:1px solid #1a1a1a;padding:12px 20px;display:flex;
+ justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;
+ letter-spacing:.2em;text-transform:uppercase;color:#6a6a6a}
+/* Padding cancelled by an equal negative margin: the tap target grows to ~32px
+   without moving the number, which at 12px type would otherwise be a 14px-tall
+   target on the one action this page exists to drive. */
+.topbar a{color:#fff;text-decoration:none;display:inline-block;padding:9px 4px;margin:-9px -4px}
+.topbar a:hover{color:#9a9a9a}
 
-.hero{position:relative;overflow:hidden;border-bottom:1px solid #262626}
-.hero .stripes{opacity:.06}
-.hero-in{position:relative;max-width:1120px;margin:0 auto;
- padding:clamp(36px,7vw,84px) 18px clamp(40px,7vw,88px);display:flex;flex-direction:column;gap:18px}
-.logo{width:clamp(230px,46vw,400px);height:auto;object-fit:contain;filter:grayscale(1) contrast(1.12)}
-.eyebrow{display:inline-flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.22em;
- text-transform:uppercase;color:#8a8a8a;font-size:14px}
-.eyebrow::before{content:"";display:inline-block;width:30px;height:2px;background:#fff;flex:none}
-/* Shrink-wrap to the headline: stretched to the container, the slab's right
-   edge lands well past the last glyph and reads as a stray grey rectangle,
-   because Anton is far narrower than the fallback the box was tuned against.
-   Sizing the wrapper to the text keeps the slab behind the words at any width. */
-.h1wrap{position:relative;align-self:flex-start;max-width:100%}
-.h1bg{position:absolute;left:-40px;right:8%;top:6%;bottom:10%;background:#1c1c1c;transform:skewX(-8deg)}
-h1{position:relative;padding:6px 0;font-size:clamp(42px,9.4vw,106px);line-height:.98;color:#fff;
- text-shadow:4px 5px 0 rgba(0,0,0,.75);text-wrap:balance}
-.lede{margin:0;max-width:540px;font-size:clamp(16px,2.1vw,20px);line-height:1.55;color:#a3a3a3;text-wrap:pretty}
-.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
-.fleet{display:flex;align-items:flex-end;gap:24px;margin-top:10px;opacity:.5;flex-wrap:wrap}
-.fleet .ic{width:clamp(96px,17vw,128px)}
-.hazard{height:24px;opacity:.85;background:repeating-linear-gradient(
- 118deg,#fff 0,#fff 9px,#0d0d0d 9px,#0d0d0d 18px,#fff 18px,#fff 22px,#0d0d0d 22px,#0d0d0d 46px)}
+.hero{border-bottom:1px solid #1a1a1a}
+.hero-in{max-width:1080px;margin:0 auto;
+ padding:clamp(44px,8vw,96px) 20px clamp(48px,8vw,100px);
+ display:flex;flex-direction:column;align-items:flex-start;gap:22px}
+.logo{width:clamp(200px,38vw,330px);height:auto;object-fit:contain;filter:grayscale(1) contrast(1.1)}
+.eyebrow{display:inline-flex;align-items:center;gap:14px;font-weight:600;letter-spacing:.26em;
+ text-transform:uppercase;color:#7a7a7a;font-size:12px}
+h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
+.lede{margin:0;max-width:500px;font-size:clamp(16px,2vw,19px);line-height:1.6;color:#8a8a8a;text-wrap:pretty}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
- font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;
- text-transform:uppercase;min-height:48px}
-.btn-solid{gap:10px;background:#fff;color:#0d0d0d;font-size:19px;padding:15px 28px}
-.btn-solid:hover{background:#cfcfcf}
-.btn-outline{color:#fff;font-size:19px;padding:15px 28px;border:2px solid #3d3d3d}
+ font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.16em;
+ text-transform:uppercase;min-height:48px;transition:background .15s,border-color .15s,color .15s}
+.btn-solid{background:#fff;color:#0a0a0a;font-size:16px;padding:14px 26px}
+.btn-solid:hover{background:#c4c4c4}
+.btn-outline{color:#fff;font-size:16px;padding:14px 26px;border:1px solid #333}
 .btn-outline:hover{border-color:#fff}
-.btn-ghost{margin-top:8px;align-self:stretch;border:2px solid #3d3d3d;color:#fff;font-size:16px;
+.btn-ghost{margin-top:10px;align-self:stretch;border:1px solid #262626;color:#fff;font-size:13px;
  padding:12px 16px;min-height:46px}
-.btn-ghost:hover{border-color:#fff;background:#fff;color:#0d0d0d}
+.btn-ghost:hover{border-color:#fff;background:#fff;color:#0a0a0a}
 
-.head{display:flex;align-items:center;gap:14px;margin:0 0 10px}
-.head h2{font-size:clamp(30px,5.4vw,54px);color:#fff;line-height:1;text-shadow:3px 4px 0 rgba(0,0,0,.7)}
-.sub{margin:0 0 30px;color:#8a8a8a;font-size:16px;max-width:540px;text-wrap:pretty}
+.head{display:flex;align-items:center;gap:16px;margin:0 0 14px}
+.head h2{font-size:clamp(28px,4.6vw,46px);color:#fff;line-height:1}
+.shield{width:36px;height:40px;overflow:visible;fill:none}
+.shield text{font-family:'Anton',sans-serif;font-size:36px;letter-spacing:1px}
+.sub{margin:0 0 40px;color:#6e6e6e;font-size:15.5px;max-width:520px;line-height:1.6;text-wrap:pretty}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:18px}
-.card{background:#141414;border:1px solid #262626;display:flex;flex-direction:column}
-.card:hover{border-color:#fff}
-/* Empty-state photo slot. Corner marks + the hazard strip make it read as a
-   frame waiting for a photo rather than an image that failed to load, and the
-   silhouette states the body style while the slot is empty. */
-.shot{position:relative;width:100%;aspect-ratio:3/2;background:#101010;display:flex;
- flex-direction:column;align-items:center;justify-content:center;gap:12px;overflow:hidden}
-.shot .stripes{opacity:.05}
-.shot .i-ph{position:relative;width:124px;fill:#4a4a4a}
-.shot span{position:relative;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#7a7a7a}
+/* Hairline grids: the 1px gap over a light background paints the rules, so
+   cards need no borders of their own and nothing doubles up at the seams. */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(264px,1fr));
+ gap:1px;background:#1a1a1a;border:1px solid #1a1a1a}
+.card{background:#0a0a0a;display:flex;flex-direction:column;transition:background .15s}
+.card:hover{background:#101010}
+/* Empty photo slot: flat, with hairline corner marks so it reads as a frame
+   waiting for a photo rather than an image that failed to load. */
+.shot{position:relative;width:100%;aspect-ratio:16/10;background:#0e0e0e;display:flex;
+ flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.shot .i-ph{width:92px;fill:#333}
+.shot span{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:#5a5a5a}
 /* Scoped under .shot deliberately: the corner marks are <span>s, so a bare
    .mk rule would lose to `.shot span` above and they would stay in the flex
    flow instead of pinning to the corners. */
-.shot .mk{position:absolute;width:20px;height:20px;border:2px solid #333}
+.shot .mk{position:absolute;width:13px;height:13px;border:1px solid #282828}
 .shot .mk.tl{top:12px;left:12px;border-right:0;border-bottom:0}
 .shot .mk.tr{top:12px;right:12px;border-left:0;border-bottom:0}
 .shot .mk.bl{bottom:12px;left:12px;border-right:0;border-top:0}
 .shot .mk.rb{bottom:12px;right:12px;border-left:0;border-top:0}
-.shot .hz{position:absolute;left:0;right:0;bottom:0;height:7px;opacity:.45;
- background:repeating-linear-gradient(118deg,#fff 0,#fff 5px,#101010 5px,#101010 10px,
- #fff 10px,#fff 12px,#101010 12px,#101010 24px)}
-.body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:9px}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.row h3{font-size:22px;color:#fff;line-height:1.1}
-.price{font-family:'Anton',sans-serif;font-size:22px;color:#fff;line-height:1;border-bottom:3px solid #fff}
-.specs{display:flex;align-items:center;gap:8px;font-size:14px;letter-spacing:.1em;
- text-transform:uppercase;color:#8a8a8a}
-.specs .i-sm{width:24px;fill:#6e6e6e}
-.note{margin:26px 0 0;color:#6e6e6e;font-size:15px;letter-spacing:.08em;text-transform:uppercase}
+.body{padding:20px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.row h3{font-size:19px;color:#fff;line-height:1.15}
+.price{font-family:'Anton',sans-serif;font-size:19px;color:#fff;line-height:1}
+.specs{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#6a6a6a}
+.note{margin:32px 0 0;color:#6e6e6e;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 
-.divider{position:relative;height:96px;border-top:1px solid #262626;border-bottom:1px solid #262626;
- background:#000;overflow:hidden;display:flex;align-items:center}
-.divider .stripes{opacity:.07}
-.divider-row{position:relative;display:flex;align-items:flex-end;gap:46px;opacity:.32;padding:0 18px}
-.divider-row .ic{width:76px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+ gap:1px;background:#1a1a1a;border:1px solid #1a1a1a}
+.trust{background:#0a0a0a;padding:26px 24px;display:flex;flex-direction:column;gap:12px}
+.trust h3{font-size:17px;color:#fff;line-height:1.25}
+.trust p{margin:0;color:#7a7a7a;font-size:14.5px;line-height:1.6;text-wrap:pretty}
 
-.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
-.trust{position:relative;overflow:hidden;background:#141414;border:1px solid #262626;
- border-top:3px solid #fff;padding:24px 22px;display:flex;flex-direction:column;gap:10px}
-.trust .i-bg{position:absolute;right:-14px;bottom:-8px;width:150px;opacity:.07}
-.trust h3{position:relative;font-size:21px;color:#fff;line-height:1.15}
-.trust p{position:relative;margin:0;color:#a3a3a3;font-size:15.5px;line-height:1.5;text-wrap:pretty}
-
-.loc{background:#000;border-top:1px solid #262626;border-bottom:1px solid #262626}
-.loc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:18px;align-items:stretch}
-.col{display:flex;flex-direction:column;gap:18px}
-.panel{background:#121212;border:1px solid #262626;padding:24px}
-.label{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.2em;
- text-transform:uppercase;font-size:13px;color:#8a8a8a;margin-bottom:10px}
-.panel address{font-style:normal;font-size:19px;color:#fff;font-weight:600;line-height:1.4}
-.dirs{display:inline-block;margin-top:12px;color:#fff;font-family:'Barlow Condensed',sans-serif;
- font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:16px;text-decoration:none;
- border-bottom:2px solid #3d3d3d}
+.loc{border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a}
+.loc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+ gap:1px;background:#1a1a1a;border:1px solid #1a1a1a}
+.col{display:flex;flex-direction:column;gap:1px;background:#1a1a1a}
+.panel{background:#0a0a0a;padding:26px 24px}
+.label{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;
+ text-transform:uppercase;font-size:11px;color:#5a5a5a;margin-bottom:12px}
+.panel address{font-style:normal;font-size:17px;color:#fff;font-weight:500;line-height:1.5}
+.dirs{display:inline-block;margin-top:8px;padding:6px 0;color:#fff;font-family:'Barlow Condensed',sans-serif;
+ font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:13px;text-decoration:none;
+ border-bottom:1px solid #333}
 .dirs:hover{border-color:#fff}
-.hours{display:flex;flex-direction:column;gap:8px;font-size:17px;color:#a3a3a3}
+.hours{display:flex;flex-direction:column;gap:10px;font-size:15px;color:#8a8a8a}
 .hours div{display:flex;justify-content:space-between;gap:14px}
-.hours b{color:#fff;font-weight:600}
-.hours .off{color:#6e6e6e;font-weight:600}
-.map{border:1px solid #262626;min-height:300px;background:#121212}
+.hours b{color:#fff;font-weight:500}
+.hours .off{color:#5a5a5a;font-weight:500}
+.map{background:#0e0e0e;min-height:300px}
 .map iframe{width:100%;height:100%;min-height:300px;border:0;display:block;
  filter:grayscale(1) invert(.92) contrast(.92)}
 
-.contact{position:relative;overflow:hidden;background:#fff;color:#0d0d0d}
-.contact .stripes{opacity:.07}
-.contact-in{position:relative;max-width:1120px;margin:0 auto;padding:clamp(40px,6vw,72px) 18px;
- display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:22px}
-.contact h2{margin-bottom:8px;font-size:clamp(29px,5vw,50px);color:#0d0d0d;line-height:1}
-.contact p{margin:0;color:#3d3d3d;font-size:16.5px}
-.btn-dark{background:#0d0d0d;color:#fff;font-family:'Anton',sans-serif;
- font-size:clamp(24px,3.6vw,34px);letter-spacing:.03em;padding:17px 32px}
+.contact{background:#fff;color:#0a0a0a}
+.contact-in{max-width:1080px;margin:0 auto;padding:clamp(44px,6vw,76px) 20px;
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
+.contact h2{margin-bottom:10px;font-size:clamp(26px,4.4vw,44px);color:#0a0a0a;line-height:1}
+.contact p{margin:0;color:#555;font-size:15.5px}
+.btn-dark{background:#0a0a0a;color:#fff;font-family:'Anton',sans-serif;
+ font-size:clamp(22px,3.2vw,30px);letter-spacing:.04em;padding:16px 30px}
 .btn-dark:hover{background:#262626}
 
-footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px;
- letter-spacing:.13em;text-transform:uppercase;color:#6e6e6e}
+footer{border-top:1px solid #1a1a1a;padding:26px 20px 96px;text-align:center;font-size:11px;
+ letter-spacing:.22em;text-transform:uppercase;color:#5c5c5c}
 
-.sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;gap:12px;background:#fff;color:#0d0d0d;
- font-size:18px;letter-spacing:.12em;padding:15px 16px;min-height:52px;border-top:3px solid #0d0d0d;
- box-shadow:0 -6px 18px rgba(0,0,0,.6)}
-.sticky:hover{background:#cfcfcf}
-.sticky .ic{width:30px;fill:#0d0d0d}
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;color:#0a0a0a;
+ font-size:14px;letter-spacing:.2em;padding:14px 16px;min-height:50px}
+.sticky:hover{background:#c4c4c4}
 
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -171,7 +164,7 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
 </script>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-truck" viewBox="0 0 200 70"><path d="M8 52 L8 34 Q8 29 13 28 L48 26 L61 9 Q63 6 68 6 L111 6 Q116 6 118 9 L127 26 L185 26 Q191 26 192 32 L192 52 L175 52 A15 15 0 0 0 145 52 L57 52 A15 15 0 0 0 27 52 Z"/><circle cx="42" cy="52" r="12"/><circle cx="160" cy="52" r="12"/></symbol><symbol id="i-car" viewBox="0 0 200 70"><path d="M6 50 L6 40 Q6 34 14 32 L46 27 L66 11 Q70 8 77 8 L124 8 Q131 8 136 12 L160 28 L184 32 Q194 35 194 43 L194 50 L172 50 A15 15 0 0 0 142 50 L58 50 A15 15 0 0 0 28 50 Z"/><circle cx="43" cy="50" r="12"/><circle cx="157" cy="50" r="12"/></symbol><symbol id="i-suv" viewBox="0 0 200 70"><path d="M8 51 L8 38 Q8 32 15 30 L44 27 L58 10 Q61 7 66 7 L150 7 Q157 7 160 11 L172 27 L184 31 Q192 34 192 42 L192 51 L174 51 A15 15 0 0 0 144 51 L56 51 A15 15 0 0 0 26 51 Z"/><circle cx="41" cy="51" r="12"/><circle cx="159" cy="51" r="12"/></symbol><symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 3.5C40 3.5 30 5.5 24 7.5 20 8.8 12 10 5.5 10c0 0 2 8 2 16v18.5C7.5 68 30 86.5 50 96.5 70 86.5 92.5 68 92.5 44.5V26c0-8 2-16 2-16C88 10 80 8.8 76 7.5 70 5.5 60 3.5 50 3.5Z" fill="#0d0d0d" stroke="#ffffff" stroke-width="7"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-truck" viewBox="0 0 200 70"><path d="M8 52 L8 34 Q8 29 13 28 L48 26 L61 9 Q63 6 68 6 L111 6 Q116 6 118 9 L127 26 L185 26 Q191 26 192 32 L192 52 L175 52 A15 15 0 0 0 145 52 L57 52 A15 15 0 0 0 27 52 Z"/><circle cx="42" cy="52" r="12"/><circle cx="160" cy="52" r="12"/></symbol><symbol id="i-car" viewBox="0 0 200 70"><path d="M6 50 L6 40 Q6 34 14 32 L46 27 L66 11 Q70 8 77 8 L124 8 Q131 8 136 12 L160 28 L184 32 Q194 35 194 43 L194 50 L172 50 A15 15 0 0 0 142 50 L58 50 A15 15 0 0 0 28 50 Z"/><circle cx="43" cy="50" r="12"/><circle cx="157" cy="50" r="12"/></symbol><symbol id="i-suv" viewBox="0 0 200 70"><path d="M8 51 L8 38 Q8 32 15 30 L44 27 L58 10 Q61 7 66 7 L150 7 Q157 7 160 11 L172 27 L184 31 Q192 34 192 42 L192 51 L174 51 A15 15 0 0 0 144 51 L56 51 A15 15 0 0 0 26 51 Z"/><circle cx="41" cy="51" r="12"/><circle cx="159" cy="51" r="12"/></symbol><symbol id="i-shield" viewBox="0 0 100 100"><path d="M50 3.5C40 3.5 30 5.5 24 7.5 20 8.8 12 10 5.5 10c0 0 2 8 2 16v18.5C7.5 68 30 86.5 50 96.5 70 86.5 92.5 68 92.5 44.5V26c0-8 2-16 2-16C88 10 80 8.8 76 7.5 70 5.5 60 3.5 50 3.5Z" fill="none" stroke="#ffffff" stroke-width="6"/></symbol></svg>
 
 <div class="topbar cond">
   <span>704 Hall Ave., Dayton, OH 45404</span>
@@ -179,24 +172,19 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
 </div>
 
 <section id="top" class="hero">
-  <div class="stripes"></div>
   <div class="hero-in">
     <img class="logo" src="logo.webp" width="640" height="292" fetchpriority="high" decoding="async"
          alt="I-75 Truck &amp; Car LLC &mdash; 704 Hall Ave., Dayton, OH 45404, 937-478-7022">
-    <div class="eyebrow cond">Used Trucks &amp; Cars &middot; Dayton, Ohio</div>
-    <div class="h1wrap">
-      <div class="h1bg" aria-hidden="true"></div>
-      <h1>TRUCKS &amp; CARS<br>WORTH DRIVING</h1>
-    </div>
+    <div class="eyebrow cond"><span class="stripe" aria-hidden="true"></span>Used Trucks &amp; Cars &middot; Dayton, Ohio</div>
+    <h1>TRUCKS &amp; CARS<br>WORTH DRIVING</h1>
     <p class="lede">Straight-shooting used vehicle sales off I-75. Every truck and car on the lot is
       inspected before it&rsquo;s listed &mdash; no surprises, no runaround.</p>
     <div class="cta-row">
       <a class="btn btn-solid cond" href="tel:9374787022">Call Now &mdash; 937-478-7022</a>
       <a class="btn btn-outline cond" href="#inventory">View Inventory</a>
     </div>
-    <div class="fleet" aria-hidden="true"><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg></div>
   </div>
-  <div class="hazard" aria-hidden="true"></div>
+  <div class="check" aria-hidden="true"></div>
 </section>
 
 <section id="inventory" class="wrap">
@@ -204,50 +192,50 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
   <p class="sub">Inventory changes weekly. Call about anything you see &mdash; or tell us what you&rsquo;re hunting for.</p>
   <div class="grid">
     <article class="card">
-      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span><div class="hz"></div></div>
+      <div class="shot"><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
-        <div class="row"><h3>2015 Chevy Silverado 1500</h3><span class="price">$18,500</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span>4WD · 112K mi · Crew Cab</span></div>
+        <div class="row"><h3>2015 Chevy Silverado 1500</h3><span class="price num">$18,500</span></div>
+        <div class="specs cond num">4WD · 112K mi · Crew Cab</div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2015 Chevy Silverado 1500">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span><div class="hz"></div></div>
+      <div class="shot"><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
-        <div class="row"><h3>2012 Ford F-150 XLT</h3><span class="price">$14,900</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span>4WD · 138K mi · New Brakes</span></div>
+        <div class="row"><h3>2012 Ford F-150 XLT</h3><span class="price num">$14,900</span></div>
+        <div class="specs cond num">4WD · 138K mi · New Brakes</div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2012 Ford F-150 XLT">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span><div class="hz"></div></div>
+      <div class="shot"><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
-        <div class="row"><h3>2016 Dodge Charger R/T</h3><span class="price">$19,750</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>5.7 HEMI · 96K mi · Clean Title</span></div>
+        <div class="row"><h3>2016 Dodge Charger R/T</h3><span class="price num">$19,750</span></div>
+        <div class="specs cond num">5.7 HEMI · 96K mi · Clean Title</div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2016 Dodge Charger R/T">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span><div class="hz"></div></div>
+      <div class="shot"><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
-        <div class="row"><h3>2014 Honda Accord EX-L</h3><span class="price">$11,400</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><span>FWD · 104K mi · Leather</span></div>
+        <div class="row"><h3>2014 Honda Accord EX-L</h3><span class="price num">$11,400</span></div>
+        <div class="specs cond num">FWD · 104K mi · Leather</div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2014 Honda Accord EX-L">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span><div class="hz"></div></div>
+      <div class="shot"><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
-        <div class="row"><h3>2017 Ram 1500 Big Horn</h3><span class="price">$22,900</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><span>4WD · 88K mi · Tow Package</span></div>
+        <div class="row"><h3>2017 Ram 1500 Big Horn</h3><span class="price num">$22,900</span></div>
+        <div class="specs cond num">4WD · 88K mi · Tow Package</div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2017 Ram 1500 Big Horn">Call About This One</a>
       </div>
     </article>
     <article class="card">
-      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><span class="cond">Photo coming soon</span><div class="hz"></div></div>
+      <div class="shot"><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span><svg class="ic i-ph" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><span class="cond">Photo coming soon</span></div>
       <div class="body">
-        <div class="row"><h3>2013 Jeep Grand Cherokee</h3><span class="price">$12,850</span></div>
-        <div class="specs cond"><svg class="ic i-sm" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><span>4WD · 129K mi · New Tires</span></div>
+        <div class="row"><h3>2013 Jeep Grand Cherokee</h3><span class="price num">$12,850</span></div>
+        <div class="specs cond num">4WD · 129K mi · New Tires</div>
         <a class="btn btn-ghost cond" href="tel:9374787022" aria-label="Call about the 2013 Jeep Grand Cherokee">Call About This One</a>
       </div>
     </article>
@@ -255,19 +243,14 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
   <p class="note cond">Don&rsquo;t see it? We source trucks and cars on request &mdash; call and tell us the year, make and budget.</p>
 </section>
 
-<div class="divider" aria-hidden="true">
-  <div class="stripes"></div>
-  <div class="divider-row"><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-suv"/></svg></div>
-</div>
-
 <section id="why" class="wrap">
   <div class="head"><svg class="ic shield" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#i-shield"/><text x="50" y="56" text-anchor="middle" dominant-baseline="middle" fill="#fff">02</text></svg><h2>WHY BUY FROM US</h2></div>
   <p class="sub">Small lot, plain terms. You deal with the people who actually looked the vehicle over.</p>
   <div class="grid4">
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>INSPECTED BEFORE LISTED</h3><p>Every vehicle gets a full mechanical look-over in our own shop before it goes on the lot.</p></div>
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>FINANCING AVAILABLE</h3><p>We work with local lenders and buy-here options. Call and we’ll tell you straight what you qualify for.</p></div>
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>TRADE-INS WELCOME</h3><p>Bring what you’re driving now. We’ll appraise it on the spot and put the value toward your next one.</p></div>
-    <div class="trust"><svg class="ic i-bg" viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-car"/></svg><h3>NO PRESSURE, NO GAMES</h3><p>Prices are the prices. Take a test drive, ask hard questions, bring your own mechanic.</p></div>
+    <div class="trust"><span class="stripe" aria-hidden="true"></span><h3>INSPECTED BEFORE LISTED</h3><p>Every vehicle gets a full mechanical look-over in our own shop before it goes on the lot.</p></div>
+    <div class="trust"><span class="stripe" aria-hidden="true"></span><h3>FINANCING AVAILABLE</h3><p>We work with local lenders and buy-here options. Call and we’ll tell you straight what you qualify for.</p></div>
+    <div class="trust"><span class="stripe" aria-hidden="true"></span><h3>TRADE-INS WELCOME</h3><p>Bring what you’re driving now. We’ll appraise it on the spot and put the value toward your next one.</p></div>
+    <div class="trust"><span class="stripe" aria-hidden="true"></span><h3>NO PRESSURE, NO GAMES</h3><p>Prices are the prices. Take a test drive, ask hard questions, bring your own mechanic.</p></div>
   </div>
 </section>
 
@@ -284,7 +267,7 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
         </div>
         <div class="panel" style="flex:1">
           <div class="label">Hours</div>
-          <div class="hours">
+          <div class="hours num">
             <div><span>Mon&ndash;Fri</span><b>9:00 AM &ndash; 6:00 PM</b></div>
             <div><span>Saturday</span><b>10:00 AM &ndash; 3:00 PM</b></div>
             <div><span>Sunday</span><span class="off">By appointment</span></div>
@@ -301,13 +284,12 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
 </section>
 
 <section id="contact" class="contact">
-  <div class="stripes dark"></div>
   <div class="contact-in">
     <div>
       <h2>READY TO DRIVE IT?</h2>
       <p>Call the lot and we&rsquo;ll have it pulled up front and warmed up.</p>
     </div>
-    <a class="btn btn-dark" href="tel:9374787022">937-478-7022</a>
+    <a class="btn btn-dark num" href="tel:9374787022">937-478-7022</a>
   </div>
 </section>
 
@@ -315,6 +297,6 @@ footer{background:#000;padding:22px 18px 96px;text-align:center;font-size:13.5px
   &copy; 2026 I-75 Truck &amp; Car LLC &middot; 704 Hall Ave., Dayton, OH 45404 &middot; Used Truck &amp; Car Sales
 </footer>
 
-<a class="btn sticky cond" href="tel:9374787022"><svg class="ic " viewBox="0 0 200 70" aria-hidden="true" focusable="false"><use href="#i-truck"/></svg>Call the Lot &mdash; 937-478-7022</a>
+<a class="btn sticky cond" href="tel:9374787022">Call the Lot &mdash; 937-478-7022</a>
 </body>
 </html>
