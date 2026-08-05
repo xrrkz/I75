@@ -46,8 +46,12 @@ h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;margin:0;transform:skewX
 .eyebrow{display:inline-flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.22em;
  text-transform:uppercase;color:#8a8a8a;font-size:14px}
 .eyebrow::before{content:"";display:inline-block;width:30px;height:2px;background:#fff;flex:none}
-.h1wrap{position:relative;align-self:stretch}
-.h1bg{position:absolute;left:-40px;right:24%;top:6%;bottom:10%;background:#1c1c1c;transform:skewX(-8deg)}
+/* Shrink-wrap to the headline: stretched to the container, the slab's right
+   edge lands well past the last glyph and reads as a stray grey rectangle,
+   because Anton is far narrower than the fallback the box was tuned against.
+   Sizing the wrapper to the text keeps the slab behind the words at any width. */
+.h1wrap{position:relative;align-self:flex-start;max-width:100%}
+.h1bg{position:absolute;left:-40px;right:8%;top:6%;bottom:10%;background:#1c1c1c;transform:skewX(-8deg)}
 h1{position:relative;padding:6px 0;font-size:clamp(42px,9.4vw,106px);line-height:.98;color:#fff;
  text-shadow:4px 5px 0 rgba(0,0,0,.75);text-wrap:balance}
 .lede{margin:0;max-width:540px;font-size:clamp(16px,2.1vw,20px);line-height:1.55;color:#a3a3a3;text-wrap:pretty}
