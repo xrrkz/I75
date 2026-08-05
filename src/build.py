@@ -172,11 +172,25 @@ h1{position:relative;padding:6px 0;font-size:clamp(42px,9.4vw,106px);line-height
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:18px}
 .card{background:#141414;border:1px solid #262626;display:flex;flex-direction:column}
 .card:hover{border-color:#fff}
+/* Empty-state photo slot. Corner marks + the hazard strip make it read as a
+   frame waiting for a photo rather than an image that failed to load, and the
+   silhouette states the body style while the slot is empty. */
 .shot{position:relative;width:100%;aspect-ratio:3/2;background:#101010;display:flex;
- flex-direction:column;align-items:center;justify-content:center;gap:10px;overflow:hidden}
+ flex-direction:column;align-items:center;justify-content:center;gap:12px;overflow:hidden}
 .shot .stripes{opacity:.05}
-.shot .i-ph{position:relative;width:84px;fill:#3d3d3d}
-.shot span{position:relative;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#6e6e6e}
+.shot .i-ph{position:relative;width:124px;fill:#4a4a4a}
+.shot span{position:relative;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#7a7a7a}
+/* Scoped under .shot deliberately: the corner marks are <span>s, so a bare
+   .mk rule would lose to `.shot span` above and they would stay in the flex
+   flow instead of pinning to the corners. */
+.shot .mk{position:absolute;width:20px;height:20px;border:2px solid #333}
+.shot .mk.tl{top:12px;left:12px;border-right:0;border-bottom:0}
+.shot .mk.tr{top:12px;right:12px;border-left:0;border-bottom:0}
+.shot .mk.bl{bottom:12px;left:12px;border-right:0;border-top:0}
+.shot .mk.rb{bottom:12px;right:12px;border-left:0;border-top:0}
+.shot .hz{position:absolute;left:0;right:0;bottom:0;height:7px;opacity:.45;
+ background:repeating-linear-gradient(118deg,#fff 0,#fff 5px,#101010 5px,#101010 10px,
+ #fff 10px,#fff 12px,#101010 12px,#101010 24px)}
 .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:9px}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .row h3{font-size:22px;color:#fff;line-height:1.1}
@@ -246,7 +260,7 @@ def esc(s):
 
 
 cards = "\n".join(f"""    <article class="card">
-      <div class="shot"><div class="stripes"></div>{veh(k, 'i-ph')}<span class="cond">Photo coming soon</span></div>
+      <div class="shot"><div class="stripes"></div><span class="mk tl"></span><span class="mk tr"></span><span class="mk bl"></span><span class="mk rb"></span>{veh(k, 'i-ph')}<span class="cond">Photo coming soon</span><div class="hz"></div></div>
       <div class="body">
         <div class="row"><h3>{esc(n)}</h3><span class="price">{esc(p)}</span></div>
         <div class="specs cond">{veh(k, 'i-sm')}<span>{esc(s)}</span></div>
