@@ -248,7 +248,57 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 96px;text-align:center;fon
  font-size:14px;letter-spacing:.2em;padding:14px 16px;min-height:50px}
 .sticky:hover{background:#c4c4c4}
 
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* ---- Load-in sequence -------------------------------------------------
+   Hero only: it is what is on screen at load, and animating the sections
+   below would spend the motion where nobody is looking.
+
+   Every element animates from a hidden `from` state held by
+   animation-fill-mode:both, which is what produces the stagger without a
+   separate initial rule. That also means these keyframes are the ONLY thing
+   hiding anything -- if the stylesheet fails to load, the markup renders
+   plain and fully visible rather than blank.
+
+   Only opacity/transform/clip-path animate, so nothing here reflows and the
+   sequence contributes no layout shift. */
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-38px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* A wipe, not a scaleX: scaling would stretch the checker squares on the way
+   in. clip-path reveals the pattern at its true size. */
+@keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes riseUp{from{transform:translateY(100%)}to{transform:none}}
+
+.topbar{animation:fadeIn .45s ease both}
+.logo{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .05s both}
+.eyebrow{animation:riseIn .5s cubic-bezier(.16,.84,.3,1) .18s both}
+/* Scoped to the hero: the trust cards reuse .stripe far below the fold. */
+.eyebrow .stripe{transform-origin:left;animation:growX .45s cubic-bezier(.16,.84,.3,1) .40s both}
+/* Per-line stagger, so the two lines arrive like a car passing. The spans
+   carry the motion because the h1 itself owns the -6deg skew -- animating
+   transform on the parent would overwrite it. */
+h1 span{display:block;animation:slideIn .6s cubic-bezier(.16,.84,.3,1) both}
+h1 span:nth-child(1){animation-delay:.26s}
+h1 span:nth-child(2){animation-delay:.36s}
+.lede{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .52s both}
+/* Animation on the base rule, delay alone on the nth-child -- same shape as
+   `h1 span` above. Putting the shorthand on `:nth-child()` would raise its
+   specificity above the reduced-motion reset below, which would leave these
+   buttons animating (and starting from opacity 0) for exactly the users who
+   asked for no motion. */
+.cta-row .btn{animation:riseIn .45s cubic-bezier(.16,.84,.3,1) both}
+.cta-row .btn:nth-child(1){animation-delay:.62s}
+.cta-row .btn:nth-child(2){animation-delay:.70s}
+.check{animation:wipeX .6s cubic-bezier(.3,.7,.4,1) .80s both}
+.sticky{animation:riseUp .5s cubic-bezier(.16,.84,.3,1) .95s both}
+
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ /* No motion at all rather than faster motion: with the animations off each
+    element sits at its resting state, which is the visible one. */
+ .topbar,.logo,.eyebrow,.eyebrow .stripe,h1 span,.lede,.cta-row .btn,.check,.sticky{
+  animation:none}
+}
 """
 
 
@@ -307,7 +357,9 @@ doc = f"""<!DOCTYPE html>
     <img class="logo" src="logo.webp" width="{LOGO_W}" height="{LOGO_H}" fetchpriority="high" decoding="async"
          alt="I-75 Truck &amp; Car LLC &mdash; {ADDR1}, {ADDR2}, {PHONE}">
     <div class="eyebrow cond"><span class="stripe" aria-hidden="true"></span>Used Trucks &amp; Cars &middot; Dayton, Ohio</div>
-    <h1>TRUCKS &amp; CARS<br>WORTH DRIVING</h1>
+    <h1><span>TRUCKS &amp; CARS</span> <span>WORTH DRIVING</span></h1>  <!-- the space between the spans is deliberate: with display:block it is
+       discarded, but if the stylesheet never loads the spans fall back to
+       inline and it keeps the two lines from running together. -->
     <p class="lede">Straight-shooting used vehicle sales off I-75. Every truck and car on the lot is
       inspected before it&rsquo;s listed &mdash; no surprises, no runaround.</p>
     <div class="cta-row">
