@@ -187,12 +187,10 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
  font-size:clamp(22px,3.2vw,30px);letter-spacing:.04em;padding:16px 30px}
 .btn-dark:hover{background:#262626}
 
-footer{border-top:1px solid #1a1a1a;padding:26px 20px 96px;text-align:center;font-size:11px;
+/* Bottom padding was 96px purely to clear the fixed call bar that used to
+   overlay this area. With the bar gone it just left a dead gap. */
+footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;font-size:11px;
  letter-spacing:.22em;text-transform:uppercase;color:#5c5c5c}
-
-.sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;color:#0a0a0a;
- font-size:14px;letter-spacing:.2em;padding:14px 16px;min-height:50px}
-.sticky:hover{background:#c4c4c4}
 
 /* ---- Load-in sequence -------------------------------------------------
    Hero only: it is what is on screen at load, and animating the sections
@@ -213,7 +211,6 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 96px;text-align:center;fon
 /* A wipe, not a scaleX: scaling would stretch the checker squares on the way
    in. clip-path reveals the pattern at its true size. */
 @keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes riseUp{from{transform:translateY(100%)}to{transform:none}}
 
 .topbar{animation:fadeIn .45s ease both}
 .brand{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .05s both}
@@ -241,7 +238,6 @@ h1 span:nth-child(2){animation-delay:.36s}
 @keyframes lane{from{transform:translateX(0)}to{transform:translateX(-110px)}}
 .road{animation:wipeX .6s cubic-bezier(.3,.7,.4,1) .80s both}
 .road .lane{animation:lane 1.9s linear 1.4s infinite}
-.sticky{animation:riseUp .5s cubic-bezier(.16,.84,.3,1) .95s both}
 
 /* ---- Interaction ------------------------------------------------------
    Gated behind hover:hover so a touch device never gets stuck in a hover
@@ -284,7 +280,7 @@ h1 span:nth-child(2){animation-delay:.36s}
    white background exactly when it is hovered, so it takes the dark streak. */
 .btn-outline::before,.btn-dark::before{
  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
-.btn-solid::before,.btn-ghost::before,.sticky::before{
+.btn-solid::before,.btn-ghost::before{
  background:linear-gradient(90deg,transparent,rgba(0,0,0,.24),transparent)}
 @media (hover:hover){
  .btn:hover::before{animation:sweep .62s cubic-bezier(.3,.6,.4,1)}
@@ -328,7 +324,7 @@ h1 span:nth-child(2){animation-delay:.36s}
  html{scroll-behavior:auto}
  /* No motion at all rather than faster motion: with the animations off each
     element sits at its resting state, which is the visible one. */
- .topbar,.brand,.eyebrow,.eyebrow .stripe,h1 span,.lede,.cta-row .btn,.road,.road .lane,.sticky{
+ .topbar,.brand,.eyebrow,.eyebrow .stripe,h1 span,.lede,.cta-row .btn,.road,.road .lane{
   animation:none}
  /* The speed line and the press dip are motion too. */
  .btn:hover::before,.card:hover .btn-ghost::before{animation:none}
@@ -484,6 +480,5 @@ h1 span:nth-child(2){animation-delay:.36s}
   &copy; 2026 I-75 Truck &amp; Car LLC &middot; 704 Hall Ave., Dayton, OH 45404 &middot; Used Truck &amp; Car Sales
 </footer>
 
-<a class="btn sticky cond" href="tel:9374787022">Call the Lot &mdash; 937-478-7022</a>
 </body>
 </html>
