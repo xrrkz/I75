@@ -108,15 +108,34 @@ FAVICON_SVG = (
 FAVICON_URI = "data:image/svg+xml;base64," + base64.b64encode(FAVICON_SVG.encode()).decode()
 
 CSS = """
+/* ---- Metric-matched fallbacks -----------------------------------------
+   Anton carries only 79.6% of Arial's advance width (Barlow Condensed 70.4%),
+   measured from the shipped font files. Left unadjusted, the fallback renders
+   the headline far wider, it wraps to a different number of lines, and the
+   whole page jumps when the webfont swaps in. size-adjust scales the fallback
+   to the same advance so the line count matches; the ascent/descent overrides
+   keep the line box the same height at that new scale.
+
+   local() only -- these download nothing. Liberation Sans is metric-identical
+   to Arial and Helvetica is metric-compatible, so one set of numbers covers
+   Windows, macOS and most Linux. Where none resolve the face fails and the
+   stack falls through to sans-serif, i.e. exactly today's behaviour. */
+@font-face{font-family:'Anton Fb';src:local('Arial'),local('Helvetica'),local('Liberation Sans');
+ size-adjust:79.64%;ascent-override:176.33%;descent-override:41.32%;line-gap-override:0%}
+@font-face{font-family:'Barlow Fb';src:local('Arial'),local('Helvetica'),local('Liberation Sans');
+ size-adjust:93.20%;ascent-override:119.32%;descent-override:26.72%;line-gap-override:0%}
+@font-face{font-family:'BarlowC Fb';src:local('Arial'),local('Helvetica'),local('Liberation Sans');
+ size-adjust:70.40%;ascent-override:152.69%;descent-override:38.92%;line-gap-override:0%}
+
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#0a0a0a;color:#d6d6d6;font-family:'Barlow',sans-serif;
+body{margin:0;background:#0a0a0a;color:#d6d6d6;font-family:'Barlow','Barlow Fb',sans-serif;
  -webkit-font-smoothing:antialiased;min-width:320px;overflow-x:hidden}
-h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;margin:0}
+h1,h2,h3{font-family:'Anton','Anton Fb',sans-serif;font-weight:400;margin:0}
 /* The skew is the one bit of motorsport italic kept on type. Shallower than a
    real oblique so it reads as lean rather than as a novelty. */
 h1,h2,h3{transform:skewX(-6deg)}
-.cond{font-family:'Barlow Condensed',sans-serif}
+.cond{font-family:'Barlow Condensed','BarlowC Fb',sans-serif}
 .ic{fill:#fff;height:auto;flex:none}
 /* Timing-board numerals: figures line up column-wise in prices and hours. */
 .num{font-variant-numeric:tabular-nums}
@@ -157,7 +176,7 @@ h1,h2,h3{transform:skewX(-6deg)}
    business identified at the top of the page without a raster image. */
 .brand{display:flex;align-items:center;gap:12px}
 .brand .shield{width:38px;height:42px}
-.brand-name{font-family:'Anton',sans-serif;font-size:clamp(19px,2.4vw,24px);
+.brand-name{font-family:'Anton','Anton Fb',sans-serif;font-size:clamp(19px,2.4vw,24px);
  letter-spacing:.03em;color:#fff;transform:skewX(-6deg)}
 .eyebrow{display:inline-flex;align-items:center;gap:14px;font-weight:600;letter-spacing:.26em;
  text-transform:uppercase;color:#7a7a7a;font-size:12px}
@@ -166,7 +185,7 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
 .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
- font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.16em;
+ font-family:'Barlow Condensed','BarlowC Fb',sans-serif;font-weight:700;letter-spacing:.16em;
  text-transform:uppercase;min-height:48px;transition:background .15s,border-color .15s,color .15s}
 .btn-solid{background:#fff;color:#0a0a0a;font-size:16px;padding:14px 26px}
 .btn-solid:hover{background:#c4c4c4}
@@ -179,7 +198,7 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
 .head{display:flex;align-items:center;gap:16px;margin:0 0 14px}
 .head h2{font-size:clamp(28px,4.6vw,46px);color:#fff;line-height:1}
 .shield{width:36px;height:40px;overflow:visible;fill:none}
-.shield text{font-family:'Anton',sans-serif;font-size:36px;letter-spacing:1px}
+.shield text{font-family:'Anton','Anton Fb',sans-serif;font-size:36px;letter-spacing:1px}
 .sub{margin:0 0 40px;color:#6e6e6e;font-size:15.5px;max-width:520px;line-height:1.6;text-wrap:pretty}
 
 /* Hairline grids: the 1px gap over a light background paints the rules, so
@@ -205,7 +224,7 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
 .body{padding:20px;display:flex;flex-direction:column;gap:10px}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .row h3{font-size:19px;color:#fff;line-height:1.15}
-.price{font-family:'Anton',sans-serif;font-size:19px;color:#fff;line-height:1}
+.price{font-family:'Anton','Anton Fb',sans-serif;font-size:19px;color:#fff;line-height:1}
 .specs{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#6a6a6a}
 .note{margin:32px 0 0;color:#6e6e6e;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 
@@ -220,10 +239,10 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
  gap:1px;background:#1a1a1a;border:1px solid #1a1a1a}
 .col{display:flex;flex-direction:column;gap:1px;background:#1a1a1a}
 .panel{background:#0a0a0a;padding:26px 24px}
-.label{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;
+.label{font-family:'Barlow Condensed','BarlowC Fb',sans-serif;font-weight:600;letter-spacing:.24em;
  text-transform:uppercase;font-size:11px;color:#5a5a5a;margin-bottom:12px}
 .panel address{font-style:normal;font-size:17px;color:#fff;font-weight:500;line-height:1.5}
-.dirs{display:inline-block;margin-top:8px;padding:6px 0;color:#fff;font-family:'Barlow Condensed',sans-serif;
+.dirs{display:inline-block;margin-top:8px;padding:6px 0;color:#fff;font-family:'Barlow Condensed','BarlowC Fb',sans-serif;
  font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:13px;text-decoration:none;
  border-bottom:1px solid #333}
 .dirs:hover{border-color:#fff}
@@ -240,7 +259,7 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px}
 .contact h2{margin-bottom:10px;font-size:clamp(26px,4.4vw,44px);color:#0a0a0a;line-height:1}
 .contact p{margin:0;color:#555;font-size:15.5px}
-.btn-dark{background:#0a0a0a;color:#fff;font-family:'Anton',sans-serif;
+.btn-dark{background:#0a0a0a;color:#fff;font-family:'Anton','Anton Fb',sans-serif;
  font-size:clamp(22px,3.2vw,30px);letter-spacing:.04em;padding:16px 30px}
 .btn-dark:hover{background:#262626}
 
