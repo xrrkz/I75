@@ -15,17 +15,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Barlow:wght@400;500;600;700&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
 <style>
 /* ---- Metric-matched fallbacks -----------------------------------------
-   Anton carries only 79.6% of Arial's advance width (Barlow Condensed 70.4%),
-   measured from the shipped font files. Left unadjusted, the fallback renders
-   the headline far wider, it wraps to a different number of lines, and the
-   whole page jumps when the webfont swaps in. size-adjust scales the fallback
-   to the same advance so the line count matches; the ascent/descent overrides
-   keep the line box the same height at that new scale.
+   Anton sets far narrower than Arial, Barlow Condensed narrower still. Left
+   unadjusted the fallback draws the headline much wider, it wraps to a
+   different number of lines, and the whole page relaid out when the webfont
+   swapped in. size-adjust scales the fallback to the same advance so the line
+   count matches either way; the ascent/descent overrides keep the line box the
+   same height at that new scale.
 
-   Calibrated on the strings long enough to decide a line break, not on an
-   average over the alphabet: Anton's letters run ~69% of Arial while its
-   digits run ~89%, and averaging the two mis-sizes the headlines, which are
-   the only Anton text that wraps.
+   The percentages are calibrated on the strings long enough to decide a line
+   break, not on an average over the alphabet. Anton's letters run ~69% of
+   Arial's advance while its digits run ~89%; averaging the two leaves the
+   headline ~15% too wide, which at 320px overflows the column and wraps to
+   four lines. Short numeric runs like prices never wrap, so letting them pull
+   the average only mis-sizes the copy that does.
 
    local() only -- these download nothing. Liberation Sans is metric-identical
    to Arial and Helvetica is metric-compatible, so one set of numbers covers
