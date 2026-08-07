@@ -18,9 +18,6 @@ ADDR1 = "704 Hall Ave."
 ADDR2 = "Dayton, OH 45404"
 MAPS_Q = "704+Hall+Ave,+Dayton,+OH+45404"
 
-LOGO_SRC = SRC / "uploads" / "pasted-1785939777393-0.png"
-LOGO_W, LOGO_H = 640, 292
-LOGO_QUALITY = 72
 
 INVENTORY = [
     ("2015 Chevy Silverado 1500", "$18,500", "4WD · 112K mi · Crew Cab",        "truck"),
@@ -155,7 +152,13 @@ h1,h2,h3{transform:skewX(-6deg)}
 .hero-in{max-width:1080px;margin:0 auto;
  padding:clamp(44px,8vw,96px) 20px clamp(48px,8vw,100px);
  display:flex;flex-direction:column;align-items:flex-start;gap:22px}
-.logo{width:clamp(200px,38vw,330px);height:auto;object-fit:contain;filter:grayscale(1) contrast(1.1)}
+/* Typographic lockup in place of the logo photo: the highway shield already
+   carries the "75", so the wordmark only has to say the rest. Keeps the
+   business identified at the top of the page without a raster image. */
+.brand{display:flex;align-items:center;gap:12px}
+.brand .shield{width:38px;height:42px}
+.brand-name{font-family:'Anton',sans-serif;font-size:clamp(19px,2.4vw,24px);
+ letter-spacing:.03em;color:#fff;transform:skewX(-6deg)}
 .eyebrow{display:inline-flex;align-items:center;gap:14px;font-weight:600;letter-spacing:.26em;
  text-transform:uppercase;color:#7a7a7a;font-size:12px}
 h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
@@ -270,7 +273,7 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 96px;text-align:center;fon
 @keyframes riseUp{from{transform:translateY(100%)}to{transform:none}}
 
 .topbar{animation:fadeIn .45s ease both}
-.logo{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .05s both}
+.brand{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .05s both}
 .eyebrow{animation:riseIn .5s cubic-bezier(.16,.84,.3,1) .18s both}
 /* Scoped to the hero: the trust cards reuse .stripe far below the fold. */
 .eyebrow .stripe{transform-origin:left;animation:growX .45s cubic-bezier(.16,.84,.3,1) .40s both}
@@ -289,15 +292,78 @@ h1 span:nth-child(2){animation-delay:.36s}
 .cta-row .btn{animation:riseIn .45s cubic-bezier(.16,.84,.3,1) both}
 .cta-row .btn:nth-child(1){animation-delay:.62s}
 .cta-row .btn:nth-child(2){animation-delay:.70s}
-.check{animation:wipeX .6s cubic-bezier(.3,.7,.4,1) .80s both}
+/* Two animations on one element: the wipe reveals it, then the roll runs
+   forever. They touch different properties (clip-path vs background-position)
+   so they compose instead of fighting. One tile is 14px, so translating the
+   pattern exactly 14px loops seamlessly. */
+@keyframes checkRoll{from{background-position:0 0,7px 7px}to{background-position:14px 0,21px 7px}}
+.check{animation:wipeX .6s cubic-bezier(.3,.7,.4,1) .80s both,
+                 checkRoll 2.6s linear 1.4s infinite}
 .sticky{animation:riseUp .5s cubic-bezier(.16,.84,.3,1) .95s both}
+
+/* ---- Interaction ------------------------------------------------------
+   Gated behind hover:hover so a touch device never gets stuck in a hover
+   state it cannot leave. Transitions only, so anything interrupted midway
+   reverses cleanly. */
+@media (hover:hover){
+ /* The lift uses `translate`, not `transform`. These elements already carry a
+    keyframe animation that sets transform with fill:both -- the scroll reveal
+    here, the load-in on the buttons -- and an animated value beats a plain
+    declaration in the cascade, so a `transform` hover would silently never
+    apply. `translate` is a separate property, so the two compose. */
+ .card{transition:background .18s ease,translate .18s cubic-bezier(.16,.84,.3,1)}
+ .card:hover{translate:0 -3px}
+ .shot .i-ph{transition:fill .25s ease,transform .35s cubic-bezier(.16,.84,.3,1)}
+ .card:hover .i-ph{fill:#555;transform:translateX(5px)}
+ /* The corner marks pull outward on hover like a viewfinder locking on.
+    Transform rather than inset so it stays off the layout path. */
+ .shot .mk{transition:border-color .2s ease,transform .3s cubic-bezier(.16,.84,.3,1)}
+ .card:hover .mk{border-color:#4a4a4a}
+ .card:hover .mk.tl{transform:translate(-4px,-4px)}
+ .card:hover .mk.tr{transform:translate(4px,-4px)}
+ .card:hover .mk.bl{transform:translate(-4px,4px)}
+ .card:hover .mk.rb{transform:translate(4px,4px)}
+ .btn-solid:hover,.btn-dark:hover{translate:0 -2px}
+ .btn-solid,.btn-dark{transition:background .15s ease,translate .18s cubic-bezier(.16,.84,.3,1)}
+}
+/* The arrow is always in flow and only opacity/transform change, so revealing
+   it cannot reflow the button or shift the card. */
+.btn-ghost::after,.btn-solid::after,.btn-dark::after{content:"\\2192";margin-left:9px;
+ opacity:0;transform:translateX(-5px);transition:opacity .2s ease,transform .25s cubic-bezier(.16,.84,.3,1)}
+.card:hover .btn-ghost::after,.btn-ghost:hover::after,.btn-ghost:focus-visible::after,
+.btn-solid:hover::after,.btn-solid:focus-visible::after,
+.btn-dark:hover::after,.btn-dark:focus-visible::after{opacity:1;transform:none}
+/* Underline drawn on hover, over the resting hairline. */
+.dirs{background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;
+ background-position:0 100%;background-size:0 1px;transition:background-size .3s cubic-bezier(.16,.84,.3,1)}
+.dirs:hover,.dirs:focus-visible{background-size:100% 1px}
+
+/* ---- Scroll reveal ----------------------------------------------------
+   Scroll-driven, so each block animates when it actually arrives rather than
+   playing unseen at load. @supports keeps it opt-in: browsers without
+   animation-timeline get no rule at all and render everything visible, which
+   is why the guard wraps the whole block rather than just the timeline. */
+@supports (animation-timeline:view()){
+ @media (prefers-reduced-motion:no-preference){
+  .card,.trust,.panel,.map,.wrap>.head,.wrap>.sub,.loc .head,.loc .sub{
+   animation:riseIn linear both;animation-timeline:view();animation-range:entry 0% entry 55%}
+  /* Column offset turns a row arriving together into a diagonal sweep. */
+  .grid .card:nth-child(3n+2),.grid4 .trust:nth-child(4n+2){animation-range:entry 6% entry 61%}
+  .grid .card:nth-child(3n+3),.grid4 .trust:nth-child(4n+3){animation-range:entry 12% entry 67%}
+  .grid4 .trust:nth-child(4n+4){animation-range:entry 18% entry 73%}
+ }
+}
 
 @media (prefers-reduced-motion:reduce){
  html{scroll-behavior:auto}
  /* No motion at all rather than faster motion: with the animations off each
     element sits at its resting state, which is the visible one. */
- .topbar,.logo,.eyebrow,.eyebrow .stripe,h1 span,.lede,.cta-row .btn,.check,.sticky{
+ .topbar,.brand,.eyebrow,.eyebrow .stripe,h1 span,.lede,.cta-row .btn,.check,.sticky{
   animation:none}
+ /* Transitions too: a hover lift is still motion. */
+ .card,.shot .i-ph,.shot .mk,.btn-solid,.btn-dark,.dirs,
+ .btn-ghost::after,.btn-solid::after,.btn-dark::after{transition:none}
+ .card:hover,.btn-solid:hover,.btn-dark:hover{translate:none}
 }
 """
 
@@ -354,8 +420,7 @@ doc = f"""<!DOCTYPE html>
 
 <section id="top" class="hero">
   <div class="hero-in">
-    <img class="logo" src="logo.webp" width="{LOGO_W}" height="{LOGO_H}" fetchpriority="high" decoding="async"
-         alt="I-75 Truck &amp; Car LLC &mdash; {ADDR1}, {ADDR2}, {PHONE}">
+    <div class="brand">{shield('75')}<span class="brand-name">I-75 Truck &amp; Car</span></div>
     <div class="eyebrow cond"><span class="stripe" aria-hidden="true"></span>Used Trucks &amp; Cars &middot; Dayton, Ohio</div>
     <h1><span>TRUCKS &amp; CARS</span> <span>WORTH DRIVING</span></h1>  <!-- the space between the spans is deliberate: with display:block it is
        discarded, but if the stylesheet never loads the spans fall back to
@@ -437,15 +502,5 @@ doc = f"""<!DOCTYPE html>
 
 (OUT / "index.html").write_text(doc, encoding="utf-8")
 
-from PIL import Image
-
-_logo = Image.open(LOGO_SRC).convert("RGBA").resize((LOGO_W, LOGO_H), Image.LANCZOS)
-# The hero applies filter: grayscale(1), so colour data is discarded at paint
-# time anyway; storing it grayscale is smaller for an identical result.
-_alpha = _logo.getchannel("A")
-_logo = _logo.convert("L").convert("RGBA")
-_logo.putalpha(_alpha)
-_logo.save(OUT / "logo.webp", "WEBP", quality=LOGO_QUALITY, method=6)
 
 print("index.html", len(doc), "bytes")
-print("logo.webp ", (OUT / "logo.webp").stat().st_size, "bytes")
