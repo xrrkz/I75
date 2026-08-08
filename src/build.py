@@ -97,56 +97,55 @@ def shield(num):
 
 
 # ---- The "75 CUSTOMZ" chalk mark ---------------------------------------
-# Redrawn from the chalk original on the shop floor. Traced off the photo
-# rather than auto-vectorised: a raster trace of chalk on concrete carries the
-# camera's perspective and every crumb of grit, neither of which survives being
-# shrunk to a 210px header. What is kept is the geometry that makes the mark
-# recognisable --
-#   * the two long rules stacked over the digits, with the right-hand down-tick
-#   * one full-height spine cutting through everything
-#   * the 7 and the 5 hanging off a single shared bar
-#   * the underline that sweeps out past the 75, turns up into the C, runs on
-#     as the overbar of CUSTOMZ, and finally kicks down into the Z
-# That last one is why the paths are ordered as they are: strokes 7-9 and 15
-# share endpoints, so drawing them in sequence traces one continuous line
-# around the whole lockup.
+# A stroke-for-stroke trace of the chalk on the shop floor -- every mark that is
+# there, nothing that is not. Measured off the photo at 4x on each letter in
+# turn, then mapped through one linear fit, so the proportions are the chalk's
+# rather than an eyeballed redraw.
 #
-# Uneven stroke heights (U/O/M short, S taller, C/T/Z full) are the original's,
-# not a slip -- they are most of what stops this reading as a font. Character
-# comes from the geometry, so no displacement filter is needed; feTurbulence
-# would re-render on every frame of the draw-on below for the same look.
+# The single departure is perspective. The photo is shot from standing height at
+# an angle, which tilts the whole lockup and stretches the far end; the fit
+# levels that out. Everything else -- the letters sitting at four different
+# heights, the O leaning right, the S wider than the U, the Z's bottom bar
+# overshooting its top -- is copied, not tidied. That unevenness is what stops
+# this reading as a font.
+#
+# The C is a short up-tick off the end of the underline, and that is all it is.
+# It has no upright climbing to the overbar and no foot: on concrete it reads as
+# a C because the eye closes it against the long rule above, and adding the
+# strokes it implies makes it a different mark.
+#
+# So the underline, the C's tick, the overbar and the Z's top are one line
+# travelling left to right, broken only where the chalk lifted. They share
+# endpoints and are ordered consecutively, so the draw-on below lays that line
+# down in one pass.
 #
 # pathLength="100" normalises every stroke, so one dasharray value draws all
 # fifteen regardless of their true lengths.
 CHALK = [
-    ("M115.5 12 L117.5 145", 7.5),                      # 1  full-height spine
-    ("M28.5 16.5 L221 12 L222.5 31.5", 7.5),            # 2  top rule + tick
-    ("M35 46.5 L218.5 43", 7.5),                        # 3  shared bar
-    ("M92.5 46 L94.5 125.5", 7.5),                      # 4  leg of the 7
-    ("M142.5 46 L143.5 86.5", 7.5),                     # 5  stem of the 5
-    ("M143.5 86.5 C160 79 187 80.5 196.5 92.5 C203 101 201.5 111.5 190 117.5 "
-     "C178.5 123 158 118 144.5 112.5", 7.5),            # 6  bowl of the 5
-    ("M10 157 L200 151 L256 149.5", 9),                 # 7  the sweep
-    ("M256 149.5 L262 74", 7.5),                        # 8  upright of the C
-    ("M262 74 L390 68.5 L515 64.5", 9),                 # 9  overbar
-    # The chalk C is barely there -- an upright with no foot, legible on a
-    # garage floor next to the word it belongs to and not much else. Drawn as
-    # found it reads as a bracket, so it gets the foot the original implies.
-    ("M258.5 149 L278 147.5", 6.5),                     # 10 foot of the C
-    ("M282 100 L284.5 140 L318.5 138 L322 96.5", 6.5),  # 11 U
-    ("M390 80.5 L334.5 84.5 L335.5 107.5 L387.5 108.5 L389.5 135 L336 137.5 "
-     "L332.5 141.5", 6.5),                              # 12 S
-    ("M403.5 69 L406 142.5", 6.5),                      # 13 T
-    ("M428.5 141 L426 106 L433 98 L463 98 L461.5 138.5 Z", 6.5),   # 14 O
-    ("M472.5 138.5 L471 97 L493 118.5 L511.5 93 L517 135", 6.5),   # 15 M
-    ("M515 64.5 L583 77 L542.5 135.5 L587.5 136.5", 6.5),          # 16 Z
+    ("M115.4 14.4 L116.8 140.3", 7.5),                  # 1  full-height spine
+    ("M27.6 15.4 L218.8 11 L221.7 27.1", 7.5),          # 2  top rule + tick
+    ("M32.9 45.1 L217.8 42.2", 7.5),                    # 3  shared bar
+    ("M93.4 45.1 L94.6 115.9", 7.5),                    # 4  leg of the 7
+    ("M139.8 42.2 L140.6 80.8", 7.5),                   # 5  stem of the 5
+    ("M139.8 81.7 C158 77.6 186 80.5 196.5 90.5 C203.5 97.5 202 108 190 113.5 "
+     "C179 118.5 155 116 139.8 111.5", 7.5),            # 6  bowl of the 5
+    ("M10 158.8 L130 151 L247.1 143.2", 8.5),           # 7  the underline
+    ("M247.5 144 L250.7 121.2", 7.5),                   # 8  up-tick of the C
+    ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 10),        # 9  overbar
+    ("M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5", 7),      # 10 U
+    ("M372.1 79.8 L334.9 83.7 L331.2 104.2 L371.5 106.6 L373.9 134.1 "
+     "L339.2 143.2 L337.3 145.4", 7),                   # 11 S
+    ("M394.7 67.1 L396.2 142", 7),                      # 12 T
+    ("M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z", 7),  # 13 O
+    ("M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9", 7),       # 14 M
+    ("M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9", 7),                  # 15 Z
 ]
 
 # (delay, duration) per stroke, in draw order. Slower through the 75, then the
-# sweep, then CUSTOMZ in quick strokes with the Z's diagonal last as a flourish.
+# underline, then CUSTOMZ in quick strokes with the Z's diagonal last.
 DRAW = [(.08, .40), (.18, .34), (.28, .32), (.38, .26), (.44, .20), (.52, .34),
-        (.62, .36), (.82, .22), (.90, .34), (1.02, .14), (1.06, .20),
-        (1.13, .24), (1.20, .18), (1.25, .22), (1.31, .22), (1.38, .30)]
+        (.62, .36), (.82, .16), (.90, .34), (1.04, .20),
+        (1.11, .24), (1.18, .18), (1.23, .22), (1.29, .22), (1.36, .30)]
 
 # Inlined at both use sites rather than <symbol>+<use>: CSS cannot reach into a
 # <use> shadow tree, so the intro copy has to own its own paths to animate them.
