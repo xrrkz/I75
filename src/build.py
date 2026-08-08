@@ -96,6 +96,71 @@ def shield(num):
             f'dominant-baseline="middle" fill="#fff">{num}</text></svg>')
 
 
+# ---- The "75 CUSTOMZ" chalk mark ---------------------------------------
+# Redrawn from the chalk original on the shop floor. Traced off the photo
+# rather than auto-vectorised: a raster trace of chalk on concrete carries the
+# camera's perspective and every crumb of grit, neither of which survives being
+# shrunk to a 210px header. What is kept is the geometry that makes the mark
+# recognisable --
+#   * the two long rules stacked over the digits, with the right-hand down-tick
+#   * one full-height spine cutting through everything
+#   * the 7 and the 5 hanging off a single shared bar
+#   * the underline that sweeps out past the 75, turns up into the C, runs on
+#     as the overbar of CUSTOMZ, and finally kicks down into the Z
+# That last one is why the paths are ordered as they are: strokes 7-9 and 15
+# share endpoints, so drawing them in sequence traces one continuous line
+# around the whole lockup.
+#
+# Uneven stroke heights (U/O/M short, S taller, C/T/Z full) are the original's,
+# not a slip -- they are most of what stops this reading as a font. Character
+# comes from the geometry, so no displacement filter is needed; feTurbulence
+# would re-render on every frame of the draw-on below for the same look.
+#
+# pathLength="100" normalises every stroke, so one dasharray value draws all
+# fifteen regardless of their true lengths.
+CHALK = [
+    ("M115.5 12 L117.5 145", 7.5),                      # 1  full-height spine
+    ("M28.5 16.5 L221 12 L222.5 31.5", 7.5),            # 2  top rule + tick
+    ("M35 46.5 L218.5 43", 7.5),                        # 3  shared bar
+    ("M92.5 46 L94.5 125.5", 7.5),                      # 4  leg of the 7
+    ("M142.5 46 L143.5 86.5", 7.5),                     # 5  stem of the 5
+    ("M143.5 86.5 C160 79 187 80.5 196.5 92.5 C203 101 201.5 111.5 190 117.5 "
+     "C178.5 123 158 118 144.5 112.5", 7.5),            # 6  bowl of the 5
+    ("M10 157 L200 151 L256 149.5", 9),                 # 7  the sweep
+    ("M256 149.5 L262 74", 7.5),                        # 8  upright of the C
+    ("M262 74 L390 68.5 L515 64.5", 9),                 # 9  overbar
+    # The chalk C is barely there -- an upright with no foot, legible on a
+    # garage floor next to the word it belongs to and not much else. Drawn as
+    # found it reads as a bracket, so it gets the foot the original implies.
+    ("M258.5 149 L278 147.5", 6.5),                     # 10 foot of the C
+    ("M282 100 L284.5 140 L318.5 138 L322 96.5", 6.5),  # 11 U
+    ("M390 80.5 L334.5 84.5 L335.5 107.5 L387.5 108.5 L389.5 135 L336 137.5 "
+     "L332.5 141.5", 6.5),                              # 12 S
+    ("M403.5 69 L406 142.5", 6.5),                      # 13 T
+    ("M428.5 141 L426 106 L433 98 L463 98 L461.5 138.5 Z", 6.5),   # 14 O
+    ("M472.5 138.5 L471 97 L493 118.5 L511.5 93 L517 135", 6.5),   # 15 M
+    ("M515 64.5 L583 77 L542.5 135.5 L587.5 136.5", 6.5),          # 16 Z
+]
+
+# (delay, duration) per stroke, in draw order. Slower through the 75, then the
+# sweep, then CUSTOMZ in quick strokes with the Z's diagonal last as a flourish.
+DRAW = [(.08, .40), (.18, .34), (.28, .32), (.38, .26), (.44, .20), (.52, .34),
+        (.62, .36), (.82, .22), (.90, .34), (1.02, .14), (1.06, .20),
+        (1.13, .24), (1.20, .18), (1.25, .22), (1.31, .22), (1.38, .30)]
+
+# Inlined at both use sites rather than <symbol>+<use>: CSS cannot reach into a
+# <use> shadow tree, so the intro copy has to own its own paths to animate them.
+# fill/stroke ride on the <svg> as presentation attributes, not in the
+# stylesheet. SVG paths default to fill:black, stroke:none -- the exact inverse
+# of this mark -- so a page that lost its CSS would draw fifteen solid blobs.
+# As attributes they still lose to any CSS rule, but they make the no-CSS
+# rendering correct: black strokes on white, which is the same mark inverted.
+def chalk(attrs):
+    paths = "".join(f'<path pathLength="100" stroke-width="{w}" d="{d}"/>' for d, w in CHALK)
+    return ('<svg class="chalk" viewBox="0 0 600 170" fill="none" stroke="currentColor" '
+            f'stroke-linecap="round" stroke-linejoin="round" {attrs}>{paths}</svg>')
+
+
 FAVICON_SVG = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
     '<rect width="100" height="100" fill="#0a0a0a"/>'
@@ -189,13 +254,16 @@ h1,h2,h3{transform:skewX(-6deg)}
 .hero-in{max-width:1080px;margin:0 auto;
  padding:clamp(44px,8vw,96px) 20px clamp(48px,8vw,100px);
  display:flex;flex-direction:column;align-items:flex-start;gap:22px}
-/* Typographic lockup in place of the logo photo: the highway shield already
-   carries the "75", so the wordmark only has to say the rest. Keeps the
-   business identified at the top of the page without a raster image. */
-.brand{display:flex;align-items:center;gap:12px}
-.brand .shield{width:38px;height:42px}
-.brand-name{font-family:'Anton','Anton Fb',sans-serif;font-size:clamp(19px,2.4vw,24px);
- letter-spacing:.03em;color:#fff;transform:skewX(-6deg)}
+/* The chalk mark, drawn as strokes rather than shipped as an image: it scales
+   to any size, weighs about a kilobyte, inherits its colour from the page, and
+   is the only form the draw-on intro can animate. */
+.chalk{display:block;width:100%;height:auto;overflow:visible}
+.chalk path{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+/* Sized by width alone -- height follows the viewBox, so the box is reserved
+   before the SVG paints and the hero never reflows around it. The floor is
+   generous because CUSTOMZ sits at about a tenth of the mark's width; below
+   ~200px those letters stop being letters. */
+.brand{display:block;width:clamp(200px,34vw,310px);color:#fff}
 .eyebrow{display:inline-flex;align-items:center;gap:14px;font-weight:600;letter-spacing:.26em;
  text-transform:uppercase;color:#7a7a7a;font-size:12px}
 h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
@@ -286,9 +354,50 @@ h1{font-size:clamp(44px,9vw,104px);line-height:.95;color:#fff;text-wrap:balance}
 footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;font-size:11px;
  letter-spacing:.22em;text-transform:uppercase;color:#5c5c5c}
 
+/* ---- Intro ------------------------------------------------------------
+   The mark writes itself on a black field, then recedes as the overlay clears
+   and the hero comes up behind it.
+
+   Fail-safe by construction: the overlay's RESTING state is hidden, and the
+   animation is what reveals it. So every way this can fail -- animations
+   unsupported, reduced motion, the keyframes dropped -- lands on "no splash,
+   site visible", never on "black screen you cannot get past". That is also why
+   `visibility` is animated alongside opacity rather than a z-index or a
+   pointer-events dance: once it ends there is nothing left to click through.
+
+   2.15s all in. A splash costs Largest Contentful Paint on a page whose job is
+   to get someone to dial a phone number, so it plays once per session (see the
+   sessionStorage gate in <head>) and it is kept short. */
+.intro{position:fixed;inset:0;z-index:100;background:#0a0a0a;color:#fff;
+ display:grid;place-items:center;padding:20px;
+ opacity:0;visibility:hidden;animation:intro 2.15s linear both}
+/* visibility is not interpolable, but while either end of the interval is
+   `visible` the computed value stays `visible` -- so this holds the overlay up
+   for the whole fade and only drops it at the very end. */
+@keyframes intro{0%{opacity:1;visibility:visible}82.8%{opacity:1}100%{opacity:0;visibility:hidden}}
+.intro-mk{width:min(84vw,720px)}
+/* Pulls back as it goes, so the mark reads as receding into the page rather
+   than dimming in place. `scale` is the standalone property, not a transform,
+   for the same reason the hover lifts use `translate`. */
+@keyframes recede{from{opacity:1;scale:1}to{opacity:0;scale:.86}}
+.intro-mk{animation:recede .4s cubic-bezier(.4,0,.2,1) 1.78s both}
+/* No static dashoffset here: fill-mode:both holds the hidden `from` state
+   through the delay, and leaves the strokes fully drawn if the animation never
+   runs at all. Declaring offset:100 outright would strand them invisible. */
+@keyframes draw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+.intro .chalk path{stroke-dasharray:100 100;
+ animation:draw .4s cubic-bezier(.5,.05,.3,1) both}
+
 /* ---- Load-in sequence -------------------------------------------------
    Hero only: it is what is on screen at load, and animating the sections
    below would spend the motion where nobody is looking.
+
+   Every delay is offset by --t0 so the hero starts as the overlay begins to
+   fade, which is what makes the site look like it is coming up behind the
+   splash rather than having been sitting there all along. On a repeat visit
+   the gate sets data-intro="off", --t0 drops to zero and the hero plays
+   immediately -- the timings are written once and follow the splash either
+   way.
 
    Every element animates from a hidden `from` state held by
    animation-fill-mode:both, which is what produces the stagger without a
@@ -306,32 +415,35 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;fon
    in. clip-path reveals the pattern at its true size. */
 @keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 
-.topbar{animation:fadeIn .45s ease both}
-.brand{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .05s both}
-.eyebrow{animation:riseIn .5s cubic-bezier(.16,.84,.3,1) .18s both}
+:root{--t0:1.7s}
+html[data-intro="off"]{--t0:0s}
+.topbar{animation:fadeIn .45s ease var(--t0) both}
+.brand{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) calc(var(--t0) + .07s) both}
+.eyebrow{animation:riseIn .5s cubic-bezier(.16,.84,.3,1) calc(var(--t0) + .2s) both}
 /* Scoped to the hero: the trust cards reuse .stripe far below the fold. */
-.eyebrow .stripe{transform-origin:left;animation:growX .45s cubic-bezier(.16,.84,.3,1) .40s both}
+.eyebrow .stripe{transform-origin:left;
+ animation:growX .45s cubic-bezier(.16,.84,.3,1) calc(var(--t0) + .42s) both}
 /* Per-line stagger, so the two lines arrive like a car passing. The spans
    carry the motion because the h1 itself owns the -6deg skew -- animating
    transform on the parent would overwrite it. */
 h1 span{display:block;animation:slideIn .6s cubic-bezier(.16,.84,.3,1) both}
-h1 span:nth-child(1){animation-delay:.26s}
-h1 span:nth-child(2){animation-delay:.36s}
-.lede{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) .52s both}
+h1 span:nth-child(1){animation-delay:calc(var(--t0) + .28s)}
+h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
+.lede{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) calc(var(--t0) + .54s) both}
 /* Animation on the base rule, delay alone on the nth-child -- same shape as
    `h1 span` above. Putting the shorthand on `:nth-child()` would raise its
    specificity above the reduced-motion reset below, which would leave these
    buttons animating (and starting from opacity 0) for exactly the users who
    asked for no motion. */
 .cta-row .btn{animation:riseIn .45s cubic-bezier(.16,.84,.3,1) both}
-.cta-row .btn:nth-child(1){animation-delay:.62s}
-.cta-row .btn:nth-child(2){animation-delay:.70s}
+.cta-row .btn:nth-child(1){animation-delay:calc(var(--t0) + .64s)}
+.cta-row .btn:nth-child(2){animation-delay:calc(var(--t0) + .72s)}
 /* The strip wipes in with the rest of the hero; the dashes inside it run on
    their own element so the two never contend for the same property. One
    period is 110px, so that is exactly how far the lane travels per cycle. */
 @keyframes lane{from{transform:translateX(0)}to{transform:translateX(-110px)}}
-.road{animation:wipeX .6s cubic-bezier(.3,.7,.4,1) .80s both}
-.road .lane{animation:lane 1.9s linear 1.4s infinite}
+.road{animation:wipeX .6s cubic-bezier(.3,.7,.4,1) calc(var(--t0) + .82s) both}
+.road .lane{animation:lane 1.9s linear calc(var(--t0) + 1.42s) infinite}
 
 /* ---- Interaction ------------------------------------------------------
    Gated behind hover:hover so a touch device never gets stuck in a hover
@@ -420,6 +532,12 @@ h1 span:nth-child(2){animation-delay:.36s}
     element sits at its resting state, which is the visible one. */
  .topbar,.brand,.eyebrow,.eyebrow .stripe,h1 span,.lede,.cta-row .btn,.road,.road .lane{
   animation:none}
+ /* The splash is skipped outright, not slowed: it is two seconds of pure
+    motion with nothing to read. .intro rests hidden, so switching the
+    animation off is the whole fix -- and --t0 goes to zero so the hero is not
+    left waiting on a splash that never plays. */
+ :root{--t0:0s}
+ .intro,.intro-mk,.intro .chalk path{animation:none}
  /* The speed line and the press dip are motion too. */
  .btn:hover::before,.card:hover .btn-ghost::before{animation:none}
  .btn:active{translate:none}
@@ -429,6 +547,13 @@ h1 span:nth-child(2){animation-delay:.36s}
  .card:hover,.btn-solid:hover,.btn-dark:hover{translate:none}
 }
 """
+
+
+# Per-stroke timing, appended rather than written inline so the numbers live
+# next to the paths they belong to.
+CSS += "\n".join(
+    f".intro .chalk path:nth-child({i}){{animation-delay:{d:g}s;animation-duration:{u:g}s}}"
+    for i, (d, u) in enumerate(DRAW, 1)) + "\n"
 
 
 def esc(s):
@@ -463,6 +588,13 @@ doc = f"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Barlow:wght@400;500;600;700&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
 <style>{CSS}</style>
+<!-- The one script on the page, and it only decides whether the splash has
+     already been seen this session. Everything it gates is CSS with a safe
+     default: if this throws (Safari private mode disables sessionStorage), or
+     is blocked, or never runs, the attribute is simply absent and the intro
+     plays -- so the page is never worse off than the no-JS path. Inline and
+     synchronous in <head> so the class is set before first paint. -->
+<script>try{{if(sessionStorage.getItem('i75.intro')){{document.documentElement.dataset.intro='off'}}else{{sessionStorage.setItem('i75.intro','1')}}}}catch(e){{}}</script>
 <script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"AutoDealer","name":"I-75 Truck & Car LLC",
 "telephone":"+1-937-478-7022",
@@ -476,6 +608,16 @@ doc = f"""<!DOCTYPE html>
 <body>
 {SPRITE}
 
+<!-- aria-hidden: the header carries the mark with its accessible name, and a
+     screen reader has no use for a second copy it cannot see anyway.
+
+     `hidden` is the no-CSS fallback. Author styles always beat the user-agent
+     origin, so `.intro{{display:grid}}` overrides `[hidden]{{display:none}}` and
+     the splash plays normally -- but if the stylesheet never arrives, the UA
+     rule stands and this collapses instead of dropping a second full-width
+     copy of the mark above the page. -->
+<div class="intro" hidden aria-hidden="true"><div class="intro-mk">{chalk('focusable="false"')}</div></div>
+
 <div class="topbar cond">
   <span>{ADDR1}, {ADDR2}</span>
   <a href="tel:{PHONE_DIGITS}">{PHONE}</a>
@@ -483,8 +625,11 @@ doc = f"""<!DOCTYPE html>
 
 <section id="top" class="hero">
   <div class="hero-in">
-    <div class="brand">{shield('75')}<span class="brand-name">I-75 Truck &amp; Car</span></div>
-    <div class="eyebrow cond"><span class="stripe" aria-hidden="true"></span>Used Trucks &amp; Cars &middot; Dayton, Ohio</div>
+    <div class="brand">{chalk('role="img" aria-label="75 Customz" focusable="false"')}</div>
+    <!-- The mark is the logo now, so the legal name moves into the line under
+         it: the business still has to be named in text on the page, and this
+         is the only place it was named outside the footer. -->
+    <div class="eyebrow cond"><span class="stripe" aria-hidden="true"></span>I-75 Truck &amp; Car &middot; Dayton, Ohio</div>
     <h1><span>TRUCKS &amp; CARS</span> <span>WORTH DRIVING</span></h1>  <!-- the space between the spans is deliberate: with display:block it is
        discarded, but if the stylesheet never loads the spans fall back to
        inline and it keeps the two lines from running together. -->
