@@ -96,71 +96,57 @@ def shield(num):
             f'dominant-baseline="middle" fill="#fff">{num}</text></svg>')
 
 
-# ---- The "75 CUSTOMZ" chalk mark ---------------------------------------
-# A stroke-for-stroke trace of the chalk on the shop floor -- every mark that is
-# there, nothing that is not. Measured off the photo at 4x on each letter in
-# turn, then mapped through one linear fit, so the proportions are the chalk's
-# rather than an eyeballed redraw.
+# ---- The "75 CUSTOMZ" mark ---------------------------------------------
+# Drawn from the chalk on the shop floor, but no longer a trace of it. The
+# earlier version measured every wobble off the photo; this one keeps the
+# structure and throws the wobble away.
 #
-# The single departure is perspective. The photo is shot from standing height at
-# an angle, which tilts the whole lockup and stretches the far end; the fit
-# levels that out. Everything else -- the letters sitting at four different
-# heights, the O leaning right, the S wider than the U, the Z's bottom bar
-# overshooting its top -- is copied, not tidied. That unevenness is what stops
-# this reading as a font.
+# Two things from the chalk are load-bearing and stay. The C is a short up-tick
+# off the end of the underline and nothing more -- no upright to the overbar, no
+# foot -- because the eye closes it against the long rule above, and drawing the
+# strokes it implies makes it a different mark. And the second rule is two
+# strokes, not one: the 7 and the 5 are separate forms with a gap between them,
+# not two things hanging off a shared bar. Running one rule through that gap
+# welds them into a single glyph.
 #
-# The C is a short up-tick off the end of the underline, and that is all it is.
-# It has no upright climbing to the overbar and no foot: on concrete it reads as
-# a C because the eye closes it against the long rule above, and adding the
-# strokes it implies makes it a different mark.
+# Stroke weights stay uneven -- the two long rules heavier than the digits, the
+# overbar heaviest -- which is what stops a grid-snapped mark reading as a font.
 #
-# So the underline, the C's tick, the overbar and the Z's top are one line
-# travelling left to right, broken only where the chalk lifted. They share
-# endpoints and are ordered consecutively, so the draw-on below lays that line
-# down in one pass.
+# pathLength="100" normalises every stroke, so one dasharray value drives the
+# draw-on below regardless of a path's true length.
 #
-# pathLength="100" normalises every stroke, so one dasharray value draws all
-# fifteen regardless of their true lengths.
-# Widths are measured, not chosen. Sampling the 5712px frame across each stroke
-# class and scaling by the mark's own width (3116px there, 580 units here) gives
-# the medians below. They are not uniform in the chalk and are not uniform here:
-# the two rules over the digits are laid on heavier than the digits themselves,
-# and CUSTOMZ heavier again -- the chalk was blunter by the time it got there.
-# The second rule is NOT one bar shared by both digits. Scanning that band
-# across the frame returns two strokes, x 164-480 and x 696-1120, with nothing
-# between them but the spine passing through. So the 7 is its own bar-and-leg
-# and the 5 its own bar-stem-bowl, and the gap between them is what lets each
-# read as a digit. Running one rule straight through welds them into a single
-# glyph, which is what it looked like before.
+# Snapped to a grid: every horizontal is level, every vertical is plumb, every
+# corner is a true right angle. The measured trace of the chalk is gone -- what
+# is kept from it is the structure, which is the part that identifies the mark:
+# the two rules stacked over the digits with the tick dropping off the top one,
+# a full-height spine standing between the digits, the 7 and the 5 as separate
+# forms rather than two things hanging off one bar, and the underline that runs
+# out past the 75 and turns up into the C.
+#
+# Each digit and letter is one path so its corners are miter joins rather than
+# two butt-capped strokes meeting, which is what actually makes a 90 degree
+# corner look sharp instead of notched. The 5's bowl and the O are squared off
+# for the same reason; only the M and the Z keep diagonals, because those two
+# letters are diagonals.
 CHALK = [
-    ("M115.4 12.3 L116.8 140.3", 2.8),                  # 1  full-height spine
-    ("M27.6 15.4 L218.8 11 L221.7 30.5", 3.6),          # 2  top rule + tick
-    ("M33.2 47 L92.3 45.7", 3.6),                       # 3  bar of the 7
-    ("M92.6 45.7 L94.6 123.6", 2.8),                    # 4  leg of the 7
-    ("M138.6 45.1 L217.8 42.4", 3.6),                   # 5  bar of the 5
-    ("M138.9 44.6 L140.6 85.9", 2.8),                   # 6  stem of the 5
-    # Not a circle. The bowl leaves the stem almost level, runs flat for a third
-    # of its width before it turns, and comes back along a bottom that is nearly
-    # as straight -- the chalk equivalent of a drawn-out 5 rather than a loop.
-    ("M140.6 85.9 C165 85.2 186 88 192.7 94.3 C198.5 99 199.5 109 196.5 114.1 "
-     "C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9", 2.8),  # 7 bowl of the 5
-    ("M10 158.8 L130 151 L247.1 143.2", 3.1),           # 8  the underline
-    ("M247.5 144 L250.7 121.2", 3.1),                   # 9  up-tick of the C
-    ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 4.5),       # 10 overbar
-    ("M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5", 3.9),    # 11 U
-    ("M372.1 79.8 L334.9 83.7 L331.2 104.2 L371.5 106.6 L373.9 134.1 "
-     "L339.2 143.2 L337.3 145.4", 3.9),                 # 12 S
-    ("M394.7 67.1 L396.2 142", 3.9),                    # 13 T
-    ("M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z", 3.9),  # 14 O
-    ("M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9", 3.9),       # 15 M
-    ("M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9", 3.9),                  # 16 Z
+    ("M116 12 L116 140", 2.8),                                  # 1  spine
+    ("M28 12 L220 12 L220 31", 3.6),                            # 2  top rule + tick
+    ("M33 46 L93 46 L93 124", 3.2),                             # 3  the 7
+    ("M218 46 L139 46 L139 86 L197 86 L197 121 L140 121", 3.2), # 4  the 5
+    ("M10 152 L247 152 L247 121", 3.1),                         # 5  underline + C
+    ("M263 66 L503 66", 4.5),                                   # 6  overbar
+    ("M273 96 L273 138 L316 138 L316 90", 3.6),                 # 7  U
+    ("M373 80 L333 80 L333 105 L373 105 L373 134 L335 134", 3.6),  # 8  S
+    ("M396 66 L396 142", 3.6),                                  # 9  T
+    ("M421 94 L461 94 L461 138 L421 138 Z", 3.6),               # 10 O
+    ("M471 136 L471 92 L497 116 L523 92 L523 136", 3.6),        # 11 M
+    ("M513 66 L586 66 L538 136 L590 136", 3.6),                 # 12 Z
 ]
 
 # (delay, duration) per stroke, in draw order. Slower through the 75, then the
 # underline, then CUSTOMZ in quick strokes with the Z's diagonal last.
-DRAW = [(.08, .40), (.18, .34), (.28, .24), (.36, .24), (.44, .24), (.50, .18),
-        (.56, .32), (.64, .36), (.84, .16), (.92, .34), (1.06, .20),
-        (1.13, .24), (1.20, .18), (1.25, .22), (1.31, .22), (1.38, .30)]
+DRAW = [(.06, .30), (.14, .28), (.24, .30), (.38, .36), (.58, .34), (.78, .28),
+        (.92, .18), (.98, .20), (1.04, .14), (1.09, .18), (1.14, .18), (1.20, .24)]
 
 # Inlined at both use sites rather than <symbol>+<use>: CSS cannot reach into a
 # <use> shadow tree, so the intro copy has to own its own paths to animate them.
@@ -379,22 +365,72 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;fon
    `visibility` is animated alongside opacity rather than a z-index or a
    pointer-events dance: once it ends there is nothing left to click through.
 
-   2.15s all in. A splash costs Largest Contentful Paint on a page whose job is
+   2.45s all in. A splash costs Largest Contentful Paint on a page whose job is
    to get someone to dial a phone number, so it plays once per session (see the
    sessionStorage gate in <head>) and it is kept short. */
 .intro{position:fixed;inset:0;z-index:100;background:#0a0a0a;color:#fff;
  display:grid;place-items:center;padding:20px;
- opacity:0;visibility:hidden;animation:intro 2.15s linear both}
+ opacity:0;visibility:hidden;animation:intro 2.45s linear both}
 /* visibility is not interpolable, but while either end of the interval is
    `visible` the computed value stays `visible` -- so this holds the overlay up
    for the whole fade and only drops it at the very end. */
-@keyframes intro{0%{opacity:1;visibility:visible}82.8%{opacity:1}100%{opacity:0;visibility:hidden}}
-.intro-mk{width:min(84vw,720px)}
+@keyframes intro{0%{opacity:1;visibility:visible}83.7%{opacity:1}100%{opacity:0;visibility:hidden}}
+.intro-mk{width:min(84vw,720px);position:relative}
 /* Pulls back as it goes, so the mark reads as receding into the page rather
    than dimming in place. `scale` is the standalone property, not a transform,
    for the same reason the hover lifts use `translate`. */
 @keyframes recede{from{opacity:1;scale:1}to{opacity:0;scale:.86}}
-.intro-mk{animation:recede .4s cubic-bezier(.4,0,.2,1) 1.78s both}
+.intro-mk{animation:recede .4s cubic-bezier(.4,0,.2,1) 2.05s both}
+
+/* ---- Ignition ---------------------------------------------------------
+   The mark finishes drawing and then catches. Ten tongues rising on their own
+   loops at slightly different widths, speeds and phases -- the offsets are the
+   whole trick, since anything that flickers in unison reads as a strobe rather
+   than a flame. A blur over the top melts the ten shapes into one body of fire.
+
+   White on black, no colour: this is the same palette as the rest of the site,
+   and a monochrome flame is really just light, which is what a black field
+   wants anyway.
+
+   Layout-free by construction -- scale, translate and opacity only, on
+   absolutely positioned elements inside a relative parent, so nothing here can
+   reflow the page behind the overlay. */
+.fire{position:absolute;left:0;right:0;bottom:-16%;height:120%;z-index:0;
+ pointer-events:none;opacity:0;filter:blur(clamp(4px,.8vw,8px));
+ animation:fireup 1.15s ease-out 1s both}
+@keyframes fireup{0%{opacity:0}22%{opacity:1}68%{opacity:1}100%{opacity:0}}
+/* The bed the tongues rise out of. Without it fourteen separate flames read as
+   a row of spikes -- an equaliser, not a fire. This is what joins them into one
+   body, so it breathes on its own slower cycle than the tongues do. */
+.fire::before{content:"";position:absolute;left:6%;right:6%;bottom:0;height:34%;
+ background:radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.9),
+  rgba(255,255,255,.45) 40%,rgba(255,255,255,0) 72%);
+ animation:ember .78s ease-in-out infinite alternate}
+@keyframes ember{from{opacity:.62;transform:scaleY(.9)}to{opacity:1;transform:scaleY(1.08)}}
+/* The mark sits above the flames rather than in them: white strokes lost
+   against a white fire would cost the logo exactly when it is on screen. */
+.intro-mk .chalk{position:relative;z-index:1}
+/* Each tongue is roughly six times taller than it is wide. That ratio is the
+   difference between fire and a row of glowing dots -- an earlier pass had them
+   nearly square and they read as blobs. clip-path gives the taper: a point at
+   the top, a bulge through the middle, a wide base. */
+.fire i{position:absolute;bottom:0;transform-origin:50% 100%;
+ clip-path:polygon(50% 0,64% 24%,72% 50%,68% 76%,78% 100%,22% 100%,32% 76%,28% 50%,36% 24%);
+ background:linear-gradient(to top,#fff 0,rgba(255,255,255,.72) 30%,
+  rgba(255,255,255,.28) 62%,rgba(255,255,255,0) 88%);
+ animation:flame .62s ease-out infinite}
+@keyframes flame{
+ 0%{transform:scaleY(.2) scaleX(.9) translateY(6%);opacity:0}
+ 20%{opacity:1}
+ 55%{transform:scaleY(1) scaleX(1) translateY(-2%);opacity:.9}
+ 100%{transform:scaleY(.45) scaleX(.7) translateY(-34%);opacity:0}}
+/* One filter on the <svg>, not twelve on the paths: the glow is the fire
+   throwing light back onto the mark, so it belongs to the whole thing. */
+.intro .chalk{animation:heat 1.2s ease-out 1s both}
+@keyframes heat{
+ 0%{filter:none}
+ 30%{filter:drop-shadow(0 0 9px rgba(255,255,255,.9))}
+ 100%{filter:none}}
 /* No static dashoffset here: fill-mode:both holds the hidden `from` state
    through the delay, and leaves the strokes fully drawn if the animation never
    runs at all. Declaring offset:100 outright would strand them invisible. */
@@ -429,7 +465,7 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;fon
    in. clip-path reveals the pattern at its true size. */
 @keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 
-:root{--t0:1.7s}
+:root{--t0:2s}
 html[data-intro="off"]{--t0:0s}
 .topbar{animation:fadeIn .45s ease var(--t0) both}
 .brand{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) calc(var(--t0) + .07s) both}
@@ -551,7 +587,8 @@ h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
     animation off is the whole fix -- and --t0 goes to zero so the hero is not
     left waiting on a splash that never plays. */
  :root{--t0:0s}
- .intro,.intro-mk,.intro .chalk path{animation:none}
+ .intro,.intro-mk,.intro .chalk,.intro .chalk path,.fire,.fire i,
+ .fire::before{animation:none}
  /* The speed line and the press dip are motion too. */
  .btn:hover::before,.card:hover .btn-ghost::before{animation:none}
  .btn:active{translate:none}
@@ -565,6 +602,22 @@ h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
 
 # Per-stroke timing, appended rather than written inline so the numbers live
 # next to the paths they belong to.
+CSS += """.fire i:nth-child(1){left:0%;width:9%;height:70%;animation-delay:0s;animation-duration:0.62s}
+.fire i:nth-child(2){left:7%;width:7%;height:55%;animation-delay:0.17s;animation-duration:0.7s}
+.fire i:nth-child(3){left:13%;width:11%;height:90%;animation-delay:0.06s;animation-duration:0.56s}
+.fire i:nth-child(4){left:20%;width:8%;height:64%;animation-delay:0.24s;animation-duration:0.66s}
+.fire i:nth-child(5){left:26%;width:10%;height:82%;animation-delay:0.11s;animation-duration:0.74s}
+.fire i:nth-child(6){left:33%;width:7.5%;height:72%;animation-delay:0.29s;animation-duration:0.58s}
+.fire i:nth-child(7){left:40%;width:9.5%;height:58%;animation-delay:0.03s;animation-duration:0.68s}
+.fire i:nth-child(8){left:46%;width:8.5%;height:94%;animation-delay:0.2s;animation-duration:0.6s}
+.fire i:nth-child(9){left:53%;width:11%;height:68%;animation-delay:0.14s;animation-duration:0.72s}
+.fire i:nth-child(10){left:60%;width:7%;height:86%;animation-delay:0.08s;animation-duration:0.64s}
+.fire i:nth-child(11){left:67%;width:10.5%;height:60%;animation-delay:0.26s;animation-duration:0.54s}
+.fire i:nth-child(12){left:74%;width:8%;height:78%;animation-delay:0.01s;animation-duration:0.7s}
+.fire i:nth-child(13){left:81%;width:9.5%;height:88%;animation-delay:0.18s;animation-duration:0.62s}
+.fire i:nth-child(14){left:89%;width:7.5%;height:66%;animation-delay:0.12s;animation-duration:0.66s}
+"""
+
 CSS += "\n".join(
     f".intro .chalk path:nth-child({i}){{animation-delay:{d:g}s;animation-duration:{u:g}s}}"
     for i, (d, u) in enumerate(DRAW, 1)) + "\n"
@@ -630,7 +683,10 @@ doc = f"""<!DOCTYPE html>
      the splash plays normally -- but if the stylesheet never arrives, the UA
      rule stands and this collapses instead of dropping a second full-width
      copy of the mark above the page. -->
-<div class="intro" hidden aria-hidden="true"><div class="intro-mk">{chalk('focusable="false"')}</div></div>
+<div class="intro" hidden aria-hidden="true"><div class="intro-mk">
+  <div class="fire">{'<i></i>' * 14}</div>
+  {chalk('focusable="false"')}
+</div></div>
 
 <div class="topbar cond">
   <span>{ADDR1}, {ADDR2}</span>

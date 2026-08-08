@@ -206,22 +206,72 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;fon
    `visibility` is animated alongside opacity rather than a z-index or a
    pointer-events dance: once it ends there is nothing left to click through.
 
-   2.15s all in. A splash costs Largest Contentful Paint on a page whose job is
+   2.45s all in. A splash costs Largest Contentful Paint on a page whose job is
    to get someone to dial a phone number, so it plays once per session (see the
    sessionStorage gate in <head>) and it is kept short. */
 .intro{position:fixed;inset:0;z-index:100;background:#0a0a0a;color:#fff;
  display:grid;place-items:center;padding:20px;
- opacity:0;visibility:hidden;animation:intro 2.15s linear both}
+ opacity:0;visibility:hidden;animation:intro 2.45s linear both}
 /* visibility is not interpolable, but while either end of the interval is
    `visible` the computed value stays `visible` -- so this holds the overlay up
    for the whole fade and only drops it at the very end. */
-@keyframes intro{0%{opacity:1;visibility:visible}82.8%{opacity:1}100%{opacity:0;visibility:hidden}}
-.intro-mk{width:min(84vw,720px)}
+@keyframes intro{0%{opacity:1;visibility:visible}83.7%{opacity:1}100%{opacity:0;visibility:hidden}}
+.intro-mk{width:min(84vw,720px);position:relative}
 /* Pulls back as it goes, so the mark reads as receding into the page rather
    than dimming in place. `scale` is the standalone property, not a transform,
    for the same reason the hover lifts use `translate`. */
 @keyframes recede{from{opacity:1;scale:1}to{opacity:0;scale:.86}}
-.intro-mk{animation:recede .4s cubic-bezier(.4,0,.2,1) 1.78s both}
+.intro-mk{animation:recede .4s cubic-bezier(.4,0,.2,1) 2.05s both}
+
+/* ---- Ignition ---------------------------------------------------------
+   The mark finishes drawing and then catches. Ten tongues rising on their own
+   loops at slightly different widths, speeds and phases -- the offsets are the
+   whole trick, since anything that flickers in unison reads as a strobe rather
+   than a flame. A blur over the top melts the ten shapes into one body of fire.
+
+   White on black, no colour: this is the same palette as the rest of the site,
+   and a monochrome flame is really just light, which is what a black field
+   wants anyway.
+
+   Layout-free by construction -- scale, translate and opacity only, on
+   absolutely positioned elements inside a relative parent, so nothing here can
+   reflow the page behind the overlay. */
+.fire{position:absolute;left:0;right:0;bottom:-16%;height:120%;z-index:0;
+ pointer-events:none;opacity:0;filter:blur(clamp(4px,.8vw,8px));
+ animation:fireup 1.15s ease-out 1s both}
+@keyframes fireup{0%{opacity:0}22%{opacity:1}68%{opacity:1}100%{opacity:0}}
+/* The bed the tongues rise out of. Without it fourteen separate flames read as
+   a row of spikes -- an equaliser, not a fire. This is what joins them into one
+   body, so it breathes on its own slower cycle than the tongues do. */
+.fire::before{content:"";position:absolute;left:6%;right:6%;bottom:0;height:34%;
+ background:radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.9),
+  rgba(255,255,255,.45) 40%,rgba(255,255,255,0) 72%);
+ animation:ember .78s ease-in-out infinite alternate}
+@keyframes ember{from{opacity:.62;transform:scaleY(.9)}to{opacity:1;transform:scaleY(1.08)}}
+/* The mark sits above the flames rather than in them: white strokes lost
+   against a white fire would cost the logo exactly when it is on screen. */
+.intro-mk .chalk{position:relative;z-index:1}
+/* Each tongue is roughly six times taller than it is wide. That ratio is the
+   difference between fire and a row of glowing dots -- an earlier pass had them
+   nearly square and they read as blobs. clip-path gives the taper: a point at
+   the top, a bulge through the middle, a wide base. */
+.fire i{position:absolute;bottom:0;transform-origin:50% 100%;
+ clip-path:polygon(50% 0,64% 24%,72% 50%,68% 76%,78% 100%,22% 100%,32% 76%,28% 50%,36% 24%);
+ background:linear-gradient(to top,#fff 0,rgba(255,255,255,.72) 30%,
+  rgba(255,255,255,.28) 62%,rgba(255,255,255,0) 88%);
+ animation:flame .62s ease-out infinite}
+@keyframes flame{
+ 0%{transform:scaleY(.2) scaleX(.9) translateY(6%);opacity:0}
+ 20%{opacity:1}
+ 55%{transform:scaleY(1) scaleX(1) translateY(-2%);opacity:.9}
+ 100%{transform:scaleY(.45) scaleX(.7) translateY(-34%);opacity:0}}
+/* One filter on the <svg>, not twelve on the paths: the glow is the fire
+   throwing light back onto the mark, so it belongs to the whole thing. */
+.intro .chalk{animation:heat 1.2s ease-out 1s both}
+@keyframes heat{
+ 0%{filter:none}
+ 30%{filter:drop-shadow(0 0 9px rgba(255,255,255,.9))}
+ 100%{filter:none}}
 /* No static dashoffset here: fill-mode:both holds the hidden `from` state
    through the delay, and leaves the strokes fully drawn if the animation never
    runs at all. Declaring offset:100 outright would strand them invisible. */
@@ -256,7 +306,7 @@ footer{border-top:1px solid #1a1a1a;padding:26px 20px 30px;text-align:center;fon
    in. clip-path reveals the pattern at its true size. */
 @keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 
-:root{--t0:1.7s}
+:root{--t0:2s}
 html[data-intro="off"]{--t0:0s}
 .topbar{animation:fadeIn .45s ease var(--t0) both}
 .brand{animation:riseIn .55s cubic-bezier(.16,.84,.3,1) calc(var(--t0) + .07s) both}
@@ -378,7 +428,8 @@ h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
     animation off is the whole fix -- and --t0 goes to zero so the hero is not
     left waiting on a splash that never plays. */
  :root{--t0:0s}
- .intro,.intro-mk,.intro .chalk path{animation:none}
+ .intro,.intro-mk,.intro .chalk,.intro .chalk path,.fire,.fire i,
+ .fire::before{animation:none}
  /* The speed line and the press dip are motion too. */
  .btn:hover::before,.card:hover .btn-ghost::before{animation:none}
  .btn:active{translate:none}
@@ -387,22 +438,32 @@ h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
  .btn-ghost::after,.btn-solid::after,.btn-dark::after{transition:none}
  .card:hover,.btn-solid:hover,.btn-dark:hover{translate:none}
 }
-.intro .chalk path:nth-child(1){animation-delay:0.08s;animation-duration:0.4s}
-.intro .chalk path:nth-child(2){animation-delay:0.18s;animation-duration:0.34s}
-.intro .chalk path:nth-child(3){animation-delay:0.28s;animation-duration:0.24s}
-.intro .chalk path:nth-child(4){animation-delay:0.36s;animation-duration:0.24s}
-.intro .chalk path:nth-child(5){animation-delay:0.44s;animation-duration:0.24s}
-.intro .chalk path:nth-child(6){animation-delay:0.5s;animation-duration:0.18s}
-.intro .chalk path:nth-child(7){animation-delay:0.56s;animation-duration:0.32s}
-.intro .chalk path:nth-child(8){animation-delay:0.64s;animation-duration:0.36s}
-.intro .chalk path:nth-child(9){animation-delay:0.84s;animation-duration:0.16s}
-.intro .chalk path:nth-child(10){animation-delay:0.92s;animation-duration:0.34s}
-.intro .chalk path:nth-child(11){animation-delay:1.06s;animation-duration:0.2s}
-.intro .chalk path:nth-child(12){animation-delay:1.13s;animation-duration:0.24s}
-.intro .chalk path:nth-child(13){animation-delay:1.2s;animation-duration:0.18s}
-.intro .chalk path:nth-child(14){animation-delay:1.25s;animation-duration:0.22s}
-.intro .chalk path:nth-child(15){animation-delay:1.31s;animation-duration:0.22s}
-.intro .chalk path:nth-child(16){animation-delay:1.38s;animation-duration:0.3s}
+.fire i:nth-child(1){left:0%;width:9%;height:70%;animation-delay:0s;animation-duration:0.62s}
+.fire i:nth-child(2){left:7%;width:7%;height:55%;animation-delay:0.17s;animation-duration:0.7s}
+.fire i:nth-child(3){left:13%;width:11%;height:90%;animation-delay:0.06s;animation-duration:0.56s}
+.fire i:nth-child(4){left:20%;width:8%;height:64%;animation-delay:0.24s;animation-duration:0.66s}
+.fire i:nth-child(5){left:26%;width:10%;height:82%;animation-delay:0.11s;animation-duration:0.74s}
+.fire i:nth-child(6){left:33%;width:7.5%;height:72%;animation-delay:0.29s;animation-duration:0.58s}
+.fire i:nth-child(7){left:40%;width:9.5%;height:58%;animation-delay:0.03s;animation-duration:0.68s}
+.fire i:nth-child(8){left:46%;width:8.5%;height:94%;animation-delay:0.2s;animation-duration:0.6s}
+.fire i:nth-child(9){left:53%;width:11%;height:68%;animation-delay:0.14s;animation-duration:0.72s}
+.fire i:nth-child(10){left:60%;width:7%;height:86%;animation-delay:0.08s;animation-duration:0.64s}
+.fire i:nth-child(11){left:67%;width:10.5%;height:60%;animation-delay:0.26s;animation-duration:0.54s}
+.fire i:nth-child(12){left:74%;width:8%;height:78%;animation-delay:0.01s;animation-duration:0.7s}
+.fire i:nth-child(13){left:81%;width:9.5%;height:88%;animation-delay:0.18s;animation-duration:0.62s}
+.fire i:nth-child(14){left:89%;width:7.5%;height:66%;animation-delay:0.12s;animation-duration:0.66s}
+.intro .chalk path:nth-child(1){animation-delay:0.06s;animation-duration:0.3s}
+.intro .chalk path:nth-child(2){animation-delay:0.14s;animation-duration:0.28s}
+.intro .chalk path:nth-child(3){animation-delay:0.24s;animation-duration:0.3s}
+.intro .chalk path:nth-child(4){animation-delay:0.38s;animation-duration:0.36s}
+.intro .chalk path:nth-child(5){animation-delay:0.58s;animation-duration:0.34s}
+.intro .chalk path:nth-child(6){animation-delay:0.78s;animation-duration:0.28s}
+.intro .chalk path:nth-child(7){animation-delay:0.92s;animation-duration:0.18s}
+.intro .chalk path:nth-child(8){animation-delay:0.98s;animation-duration:0.2s}
+.intro .chalk path:nth-child(9){animation-delay:1.04s;animation-duration:0.14s}
+.intro .chalk path:nth-child(10){animation-delay:1.09s;animation-duration:0.18s}
+.intro .chalk path:nth-child(11){animation-delay:1.14s;animation-duration:0.18s}
+.intro .chalk path:nth-child(12){animation-delay:1.2s;animation-duration:0.24s}
 </style>
 <!-- The one script on the page, and it only decides whether the splash has
      already been seen this session. Everything it gates is CSS with a safe
@@ -432,7 +493,10 @@ h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
      the splash plays normally -- but if the stylesheet never arrives, the UA
      rule stands and this collapses instead of dropping a second full-width
      copy of the mark above the page. -->
-<div class="intro" hidden aria-hidden="true"><div class="intro-mk"><svg class="chalk" viewBox="0 0 600 170" fill="none" stroke="currentColor" stroke-linecap="butt" stroke-linejoin="miter" focusable="false"><path pathLength="100" stroke-width="2.8" d="M115.4 12.3 L116.8 140.3"/><path pathLength="100" stroke-width="3.6" d="M27.6 15.4 L218.8 11 L221.7 30.5"/><path pathLength="100" stroke-width="3.6" d="M33.2 47 L92.3 45.7"/><path pathLength="100" stroke-width="2.8" d="M92.6 45.7 L94.6 123.6"/><path pathLength="100" stroke-width="3.6" d="M138.6 45.1 L217.8 42.4"/><path pathLength="100" stroke-width="2.8" d="M138.9 44.6 L140.6 85.9"/><path pathLength="100" stroke-width="2.8" d="M140.6 85.9 C165 85.2 186 88 192.7 94.3 C198.5 99 199.5 109 196.5 114.1 C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9"/><path pathLength="100" stroke-width="3.1" d="M10 158.8 L130 151 L247.1 143.2"/><path pathLength="100" stroke-width="3.1" d="M247.5 144 L250.7 121.2"/><path pathLength="100" stroke-width="4.5" d="M262.9 72.9 L383.7 67.1 L503.2 62.7"/><path pathLength="100" stroke-width="3.9" d="M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5"/><path pathLength="100" stroke-width="3.9" d="M372.1 79.8 L334.9 83.7 L331.2 104.2 L371.5 106.6 L373.9 134.1 L339.2 143.2 L337.3 145.4"/><path pathLength="100" stroke-width="3.9" d="M394.7 67.1 L396.2 142"/><path pathLength="100" stroke-width="3.9" d="M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z"/><path pathLength="100" stroke-width="3.9" d="M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9"/><path pathLength="100" stroke-width="3.9" d="M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9"/></svg></div></div>
+<div class="intro" hidden aria-hidden="true"><div class="intro-mk">
+  <div class="fire"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <svg class="chalk" viewBox="0 0 600 170" fill="none" stroke="currentColor" stroke-linecap="butt" stroke-linejoin="miter" focusable="false"><path pathLength="100" stroke-width="2.8" d="M116 12 L116 140"/><path pathLength="100" stroke-width="3.6" d="M28 12 L220 12 L220 31"/><path pathLength="100" stroke-width="3.2" d="M33 46 L93 46 L93 124"/><path pathLength="100" stroke-width="3.2" d="M218 46 L139 46 L139 86 L197 86 L197 121 L140 121"/><path pathLength="100" stroke-width="3.1" d="M10 152 L247 152 L247 121"/><path pathLength="100" stroke-width="4.5" d="M263 66 L503 66"/><path pathLength="100" stroke-width="3.6" d="M273 96 L273 138 L316 138 L316 90"/><path pathLength="100" stroke-width="3.6" d="M373 80 L333 80 L333 105 L373 105 L373 134 L335 134"/><path pathLength="100" stroke-width="3.6" d="M396 66 L396 142"/><path pathLength="100" stroke-width="3.6" d="M421 94 L461 94 L461 138 L421 138 Z"/><path pathLength="100" stroke-width="3.6" d="M471 136 L471 92 L497 116 L523 92 L523 136"/><path pathLength="100" stroke-width="3.6" d="M513 66 L586 66 L538 136 L590 136"/></svg>
+</div></div>
 
 <div class="topbar cond">
   <span>704 Hall Ave., Dayton, OH 45404</span>
@@ -441,7 +505,7 @@ h1 span:nth-child(2){animation-delay:calc(var(--t0) + .38s)}
 
 <section id="top" class="hero">
   <div class="hero-in">
-    <div class="brand"><svg class="chalk" viewBox="0 0 600 170" fill="none" stroke="currentColor" stroke-linecap="butt" stroke-linejoin="miter" role="img" aria-label="75 Customz" focusable="false"><path pathLength="100" stroke-width="2.8" d="M115.4 12.3 L116.8 140.3"/><path pathLength="100" stroke-width="3.6" d="M27.6 15.4 L218.8 11 L221.7 30.5"/><path pathLength="100" stroke-width="3.6" d="M33.2 47 L92.3 45.7"/><path pathLength="100" stroke-width="2.8" d="M92.6 45.7 L94.6 123.6"/><path pathLength="100" stroke-width="3.6" d="M138.6 45.1 L217.8 42.4"/><path pathLength="100" stroke-width="2.8" d="M138.9 44.6 L140.6 85.9"/><path pathLength="100" stroke-width="2.8" d="M140.6 85.9 C165 85.2 186 88 192.7 94.3 C198.5 99 199.5 109 196.5 114.1 C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9"/><path pathLength="100" stroke-width="3.1" d="M10 158.8 L130 151 L247.1 143.2"/><path pathLength="100" stroke-width="3.1" d="M247.5 144 L250.7 121.2"/><path pathLength="100" stroke-width="4.5" d="M262.9 72.9 L383.7 67.1 L503.2 62.7"/><path pathLength="100" stroke-width="3.9" d="M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5"/><path pathLength="100" stroke-width="3.9" d="M372.1 79.8 L334.9 83.7 L331.2 104.2 L371.5 106.6 L373.9 134.1 L339.2 143.2 L337.3 145.4"/><path pathLength="100" stroke-width="3.9" d="M394.7 67.1 L396.2 142"/><path pathLength="100" stroke-width="3.9" d="M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z"/><path pathLength="100" stroke-width="3.9" d="M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9"/><path pathLength="100" stroke-width="3.9" d="M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9"/></svg></div>
+    <div class="brand"><svg class="chalk" viewBox="0 0 600 170" fill="none" stroke="currentColor" stroke-linecap="butt" stroke-linejoin="miter" role="img" aria-label="75 Customz" focusable="false"><path pathLength="100" stroke-width="2.8" d="M116 12 L116 140"/><path pathLength="100" stroke-width="3.6" d="M28 12 L220 12 L220 31"/><path pathLength="100" stroke-width="3.2" d="M33 46 L93 46 L93 124"/><path pathLength="100" stroke-width="3.2" d="M218 46 L139 46 L139 86 L197 86 L197 121 L140 121"/><path pathLength="100" stroke-width="3.1" d="M10 152 L247 152 L247 121"/><path pathLength="100" stroke-width="4.5" d="M263 66 L503 66"/><path pathLength="100" stroke-width="3.6" d="M273 96 L273 138 L316 138 L316 90"/><path pathLength="100" stroke-width="3.6" d="M373 80 L333 80 L333 105 L373 105 L373 134 L335 134"/><path pathLength="100" stroke-width="3.6" d="M396 66 L396 142"/><path pathLength="100" stroke-width="3.6" d="M421 94 L461 94 L461 138 L421 138 Z"/><path pathLength="100" stroke-width="3.6" d="M471 136 L471 92 L497 116 L523 92 L523 136"/><path pathLength="100" stroke-width="3.6" d="M513 66 L586 66 L538 136 L590 136"/></svg></div>
     <!-- The mark is the logo now, so the legal name moves into the line under
          it: the business still has to be named in text on the page, and this
          is the only place it was named outside the footer. -->
