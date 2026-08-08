@@ -122,13 +122,16 @@ def shield(num):
 # pathLength="100" normalises every stroke, so one dasharray value draws all
 # fifteen regardless of their true lengths.
 CHALK = [
-    ("M115.4 14.4 L116.8 140.3", 7.5),                  # 1  full-height spine
-    ("M27.6 15.4 L218.8 11 L221.7 27.1", 7.5),          # 2  top rule + tick
-    ("M32.9 45.1 L217.8 42.2", 7.5),                    # 3  shared bar
-    ("M93.4 45.1 L94.6 115.9", 7.5),                    # 4  leg of the 7
-    ("M139.8 42.2 L140.6 80.8", 7.5),                   # 5  stem of the 5
-    ("M139.8 81.7 C158 77.6 186 80.5 196.5 90.5 C203.5 97.5 202 108 190 113.5 "
-     "C179 118.5 155 116 139.8 111.5", 7.5),            # 6  bowl of the 5
+    ("M115.4 12.3 L116.8 140.3", 7.5),                  # 1  full-height spine
+    ("M27.6 15.4 L218.8 11 L221.7 30.5", 7.5),          # 2  top rule + tick
+    ("M35 45.6 L217.8 42.2", 7.5),                      # 3  shared bar
+    ("M93.4 45.1 L94.6 123.6", 7.5),                    # 4  leg of the 7
+    ("M139.8 42.2 L140.6 85.9", 7.5),                   # 5  stem of the 5
+    # Not a circle. The bowl leaves the stem almost level, runs flat for a third
+    # of its width before it turns, and comes back along a bottom that is nearly
+    # as straight -- the chalk equivalent of a drawn-out 5 rather than a loop.
+    ("M140.6 85.9 C165 85.2 186 88 192.7 94.3 C198.5 99 199.5 109 196.5 114.1 "
+     "C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9", 7.5),  # 6 bowl of the 5
     ("M10 158.8 L130 151 L247.1 143.2", 8.5),           # 7  the underline
     ("M247.5 144 L250.7 121.2", 7.5),                   # 8  up-tick of the C
     ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 10),        # 9  overbar
