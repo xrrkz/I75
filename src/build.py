@@ -121,27 +121,32 @@ def shield(num):
 #
 # pathLength="100" normalises every stroke, so one dasharray value draws all
 # fifteen regardless of their true lengths.
+# Widths are measured, not chosen. Sampling the 5712px frame across each stroke
+# class and scaling by the mark's own width (3116px there, 580 units here) gives
+# the medians below. They are not uniform in the chalk and are not uniform here:
+# the two rules over the digits are laid on heavier than the digits themselves,
+# and CUSTOMZ heavier again -- the chalk was blunter by the time it got there.
 CHALK = [
-    ("M115.4 12.3 L116.8 140.3", 7.5),                  # 1  full-height spine
-    ("M27.6 15.4 L218.8 11 L221.7 30.5", 7.5),          # 2  top rule + tick
-    ("M35 45.6 L217.8 42.2", 7.5),                      # 3  shared bar
-    ("M93.4 45.1 L94.6 123.6", 7.5),                    # 4  leg of the 7
-    ("M139.8 42.2 L140.6 85.9", 7.5),                   # 5  stem of the 5
+    ("M115.4 12.3 L116.8 140.3", 2.8),                  # 1  full-height spine
+    ("M27.6 15.4 L218.8 11 L221.7 30.5", 3.6),          # 2  top rule + tick
+    ("M35 45.6 L217.8 42.2", 3.6),                      # 3  shared bar
+    ("M93.4 45.1 L94.6 123.6", 2.8),                    # 4  leg of the 7
+    ("M139.8 42.2 L140.6 85.9", 2.8),                   # 5  stem of the 5
     # Not a circle. The bowl leaves the stem almost level, runs flat for a third
     # of its width before it turns, and comes back along a bottom that is nearly
     # as straight -- the chalk equivalent of a drawn-out 5 rather than a loop.
     ("M140.6 85.9 C165 85.2 186 88 192.7 94.3 C198.5 99 199.5 109 196.5 114.1 "
-     "C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9", 7.5),  # 6 bowl of the 5
-    ("M10 158.8 L130 151 L247.1 143.2", 8.5),           # 7  the underline
-    ("M247.5 144 L250.7 121.2", 7.5),                   # 8  up-tick of the C
-    ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 10),        # 9  overbar
-    ("M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5", 7),      # 10 U
+     "C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9", 2.8),  # 6 bowl of the 5
+    ("M10 158.8 L130 151 L247.1 143.2", 3.1),           # 7  the underline
+    ("M247.5 144 L250.7 121.2", 3.1),                   # 8  up-tick of the C
+    ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 4.5),       # 9  overbar
+    ("M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5", 3.9),    # 10 U
     ("M372.1 79.8 L334.9 83.7 L331.2 104.2 L371.5 106.6 L373.9 134.1 "
-     "L339.2 143.2 L337.3 145.4", 7),                   # 11 S
-    ("M394.7 67.1 L396.2 142", 7),                      # 12 T
-    ("M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z", 7),  # 13 O
-    ("M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9", 7),       # 14 M
-    ("M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9", 7),                  # 15 Z
+     "L339.2 143.2 L337.3 145.4", 3.9),                 # 11 S
+    ("M394.7 67.1 L396.2 142", 3.9),                    # 12 T
+    ("M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z", 3.9),  # 13 O
+    ("M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9", 3.9),       # 14 M
+    ("M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9", 3.9),                  # 15 Z
 ]
 
 # (delay, duration) per stroke, in draw order. Slower through the 75, then the
@@ -160,7 +165,7 @@ DRAW = [(.08, .40), (.18, .34), (.28, .32), (.38, .26), (.44, .20), (.52, .34),
 def chalk(attrs):
     paths = "".join(f'<path pathLength="100" stroke-width="{w}" d="{d}"/>' for d, w in CHALK)
     return ('<svg class="chalk" viewBox="0 0 600 170" fill="none" stroke="currentColor" '
-            f'stroke-linecap="round" stroke-linejoin="round" {attrs}>{paths}</svg>')
+            f'stroke-linecap="butt" stroke-linejoin="miter" {attrs}>{paths}</svg>')
 
 
 FAVICON_SVG = (
@@ -260,7 +265,7 @@ h1,h2,h3{transform:skewX(-6deg)}
    to any size, weighs about a kilobyte, inherits its colour from the page, and
    is the only form the draw-on intro can animate. */
 .chalk{display:block;width:100%;height:auto;overflow:visible}
-.chalk path{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.chalk path{fill:none;stroke:currentColor;stroke-linecap:butt;stroke-linejoin:miter}
 /* Sized by width alone -- height follows the viewBox, so the box is reserved
    before the SVG paints and the hero never reflows around it. The floor is
    generous because CUSTOMZ sits at about a tenth of the mark's width; below
