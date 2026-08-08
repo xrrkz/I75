@@ -126,34 +126,41 @@ def shield(num):
 # the medians below. They are not uniform in the chalk and are not uniform here:
 # the two rules over the digits are laid on heavier than the digits themselves,
 # and CUSTOMZ heavier again -- the chalk was blunter by the time it got there.
+# The second rule is NOT one bar shared by both digits. Scanning that band
+# across the frame returns two strokes, x 164-480 and x 696-1120, with nothing
+# between them but the spine passing through. So the 7 is its own bar-and-leg
+# and the 5 its own bar-stem-bowl, and the gap between them is what lets each
+# read as a digit. Running one rule straight through welds them into a single
+# glyph, which is what it looked like before.
 CHALK = [
     ("M115.4 12.3 L116.8 140.3", 2.8),                  # 1  full-height spine
     ("M27.6 15.4 L218.8 11 L221.7 30.5", 3.6),          # 2  top rule + tick
-    ("M35 45.6 L217.8 42.2", 3.6),                      # 3  shared bar
-    ("M93.4 45.1 L94.6 123.6", 2.8),                    # 4  leg of the 7
-    ("M139.8 42.2 L140.6 85.9", 2.8),                   # 5  stem of the 5
+    ("M33.2 47 L92.3 45.7", 3.6),                       # 3  bar of the 7
+    ("M92.6 45.7 L94.6 123.6", 2.8),                    # 4  leg of the 7
+    ("M138.6 45.1 L217.8 42.4", 3.6),                   # 5  bar of the 5
+    ("M138.9 44.6 L140.6 85.9", 2.8),                   # 6  stem of the 5
     # Not a circle. The bowl leaves the stem almost level, runs flat for a third
     # of its width before it turns, and comes back along a bottom that is nearly
     # as straight -- the chalk equivalent of a drawn-out 5 rather than a loop.
     ("M140.6 85.9 C165 85.2 186 88 192.7 94.3 C198.5 99 199.5 109 196.5 114.1 "
-     "C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9", 2.8),  # 6 bowl of the 5
-    ("M10 158.8 L130 151 L247.1 143.2", 3.1),           # 7  the underline
-    ("M247.5 144 L250.7 121.2", 3.1),                   # 8  up-tick of the C
-    ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 4.5),       # 9  overbar
-    ("M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5", 3.9),    # 10 U
+     "C192 119 172 121.8 152.1 121.5 C146 121.4 141.8 119.6 140.2 116.9", 2.8),  # 7 bowl of the 5
+    ("M10 158.8 L130 151 L247.1 143.2", 3.1),           # 8  the underline
+    ("M247.5 144 L250.7 121.2", 3.1),                   # 9  up-tick of the C
+    ("M262.9 72.9 L383.7 67.1 L503.2 62.7", 4.5),       # 10 overbar
+    ("M272.7 95.6 L273.9 138.3 L315.4 137.3 L316.4 89.5", 3.9),    # 11 U
     ("M372.1 79.8 L334.9 83.7 L331.2 104.2 L371.5 106.6 L373.9 134.1 "
-     "L339.2 143.2 L337.3 145.4", 3.9),                 # 11 S
-    ("M394.7 67.1 L396.2 142", 3.9),                    # 12 T
-    ("M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z", 3.9),  # 13 O
-    ("M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9", 3.9),       # 14 M
-    ("M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9", 3.9),                  # 15 Z
+     "L339.2 143.2 L337.3 145.4", 3.9),                 # 12 S
+    ("M394.7 67.1 L396.2 142", 3.9),                    # 13 T
+    ("M418.4 96.9 L423.3 93.2 L449.5 95.6 L459.9 137.1 L425.8 143.2 Z", 3.9),  # 14 O
+    ("M470.3 131 L475.8 95 L497.1 109.7 L509.3 90.2 L524.5 135.9", 3.9),       # 15 M
+    ("M511.7 71.2 L584.9 77.1 L537.3 139.5 L590 134.9", 3.9),                  # 16 Z
 ]
 
 # (delay, duration) per stroke, in draw order. Slower through the 75, then the
 # underline, then CUSTOMZ in quick strokes with the Z's diagonal last.
-DRAW = [(.08, .40), (.18, .34), (.28, .32), (.38, .26), (.44, .20), (.52, .34),
-        (.62, .36), (.82, .16), (.90, .34), (1.04, .20),
-        (1.11, .24), (1.18, .18), (1.23, .22), (1.29, .22), (1.36, .30)]
+DRAW = [(.08, .40), (.18, .34), (.28, .24), (.36, .24), (.44, .24), (.50, .18),
+        (.56, .32), (.64, .36), (.84, .16), (.92, .34), (1.06, .20),
+        (1.13, .24), (1.20, .18), (1.25, .22), (1.31, .22), (1.38, .30)]
 
 # Inlined at both use sites rather than <symbol>+<use>: CSS cannot reach into a
 # <use> shadow tree, so the intro copy has to own its own paths to animate them.
