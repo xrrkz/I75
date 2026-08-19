@@ -1,0 +1,31 @@
+{
+  "_comment": [
+    "Copy this file to trading-limits.json and set your own numbers.",
+    "trading-limits.json is gitignored — it never gets committed.",
+    "This repo is PUBLIC. Do not put account numbers, balances, or",
+    "personal details in either file. Caps only.",
+    "",
+    "The values below are deliberately small. They are a starting point",
+    "for finding out what the agent actually does, not a target."
+  ],
+
+  "account_max": 500,
+  "max_position_pct": 10,
+  "max_trade_usd": 50,
+  "max_daily_deploy_usd": 100,
+  "cash_floor_pct": 50,
+  "max_trades_per_day": 2,
+
+  "universe": [
+    "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA",
+    "JPM", "JNJ", "PG", "KO", "WMT",
+    "SPY", "VOO", "QQQ"
+  ],
+
+  "_universe_note": [
+    "Only tickers listed here may be bought. Keep it to names that are",
+    "liquid enough that the spread is a rounding error. No leveraged or",
+    "inverse ETFs, no sub-$5 stocks, no recent IPOs, nothing you would",
+    "have to look up to explain."
+  ]
+}

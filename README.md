@@ -40,3 +40,10 @@ and rebuild.
 Any static host works; the output is two files at the repo root. Point the host's
 output directory at the repo root with no build command, or run `src/build.py` as
 the build step.
+
+## Unrelated: `.claude/skills/robin-trades/`
+
+This repo also carries a Claude Code skill that has nothing to do with the site —
+operating rules for the Robinhood Agentic Trading MCP connector. It affects no
+part of the build and ships nothing to the deployed page. See
+`.claude/skills/robin-trades/README.md`.
